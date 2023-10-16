@@ -2,6 +2,10 @@ import React, { Component, useState } from 'react';
 import logo from "../../assets/image/logo.png";
 import "./QuotationForm.scss";
 import TableHeader from '../TableHeader/TableHeader';
+import TableBody from '../TableBody/TableBody';
+import jsPDF from 'jspdf';
+import html2pdf from 'html2pdf.js';
+
 
 class QuotationForm extends Component {
   constructor() {
@@ -31,8 +35,22 @@ class QuotationForm extends Component {
     const newTable = <TableHeader key={this.state.tables.length} />;
     this.setState((prevState) => ({ tables: [...prevState.tables, newTable] }));
   };
+
+  exportToPDF = () => {
+    const element = document.body; // Chọn phần tử để xuất PDF (toàn bộ trang web)
+    const options = { margin: 10, filename: 'trang-web.pdf', image: { type: 'jpeg', quality: 0.98 } };
   
+    // Sử dụng thư viện html2pdf để xuất toàn bộ trang web thành tệp PDF
+    html2pdf().from(element).set(options).outputPdf((pdf) => {
+      const blob = new Blob([pdf], { type: 'application/pdf' });
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'trang-web.pdf';
+      link.click();
+    });
+  };
   
+
 
   render() {
     return (
@@ -113,9 +131,9 @@ class QuotationForm extends Component {
           </div>
         </div>
 
-        <div className="price-table">
-            <TableHeader/>
-        </div>
+          <TableHeader />
+          <TableBody />
+          <button onClick={this.exportToPDF}>Xuất PDF</button>
       </div>
     );
   }

@@ -1,178 +1,174 @@
 .quotation-form {
-    font-family: Arial, sans-serif;
+  font-family: Arial, sans-serif;
+  //display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 20px;
+  margin: 0 auto;
+  font-size: 12px;
+
+  .logo img {
+    max-width: 60px;
+    height: auto;
+  }
+
+  .text-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .left-text {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 20px;
-    // max-width: 800px;
-    margin: 0 auto; 
-    font-size: 12px;
-    
-    .logo img {
-      max-width: 60px;
-      height: auto;
-    }
-    
-    .text-container {
-      display: flex;
-      justify-content: space-between;
-      width: 100%;
-      margin-top: 10px;
-    }
-    
-    .left-text {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      margin-top: 7px;
-      div {
-        margin-bottom: 13px;
-      }
-    }
-    
-    /* Loại bỏ khung và tuỳ chỉnh giao diện của combobox */
-    select {
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      padding: 5px 30px 5px 10px;
-      border: none;
-      border-bottom: 1px solid transparent; /* Đường gạch chân ngang */
-      background-color: transparent;
-      font-size: 14px;
-      font-weight: bold;
-      color: red; /* Màu chữ đỏ */
-      width: 100%;
-      text-indent: 10px;
-      margin-top: -35px;
-    
-      /* Tạo mũi tên dropdown tuỳ chỉnh */
-      &:after {
-        content: '\25BC'; /* Dấu mũi tên xuống */
-        position: absolute;
-        top: 0;
-        right: 0;
-        pointer-events: none;
-      }
-    
-      /* Loại bỏ mũi tên của combobox mặc định */
-      &::-ms-expand {
-        display: none;
-      }
-    
-      /* Tùy chỉnh màu sắc và kiểu hiển thị khi combobox được focus */
-      &:focus {
-        outline: none;
-        border-bottom: 1px solid transparent;
-      }
-    }
-    
-    
-    .right-text {
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-      }
-      
-      .right-text div strong {
-        margin-bottom: 1px; /* Giảm khoảng cách giữa các dòng text */
-      }
-      
-      .right-text input[type="text"] {
-        border: none; /* Bỏ phần gạch dưới các ô textbox */
-        padding: 5px;
-        transition: border 0.3s;
-        width: 600px;
-        background-color: transparent;
-        flex: 1;
-        margin-top: 0px; /* Điều chỉnh khoảng cách giữa các ô textbox và strong text */
-        margin-right: 10px; /* Điều chỉnh để tạo khoảng cách giữa các ô textbox */
-        margin-left: 0px; 
-      }
-      
-      .right-text input[type="text"]:focus {
-        outline: none; /* Loại bỏ border khi focus */
-      }
-      
-    
-    .supplier-selection {
-      align-self: flex-start;
-      margin-top: 0px;
-      width: 100%;
-      label {
-        font-weight: bold;
-        display: block;
-      }
-    }
-    
-    .price-table {
-        width: 100%;
-      margin-top: 20px;
-      text-align: center;
-      align-self: center;
-      table {
-        width: 100%;
-        border-collapse: collapse;
-        th, td {
-          border: 1px solid #ddd;
-          padding: 8px;
-          text-align: left;
-        }
-        th {
-          background-color: #f2f2f2;
-        }
-        tr:nth-child(even) {
-          background-color: #f2f2f2;
-        }
-        tr:hover {
-          background-color: #ddd;
-        }
-        img {
-          max-width: 50px;
-          height: auto;
-        }
-      }
+    margin-top: 7px;
+
+    div {
+      margin-bottom: 13px;
     }
   }
-  
-  /* Bọc toàn bộ nội dung để căn giữa */
-  .center-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap; /* Để xếp chồng các phần tử khi không đủ không gian */
-  }
-  
-  /* Để làm cho combobox nằm bên trái ngoài cùng */
-  .small-combobox-container {
-    flex: 1; /* Chiếm phần trái cùng */
-  }
-  
-  /* Thêm textbox và button bên cạnh combobox và căn giữa theo chiều dọc */
-  .centered-content {
-    display: flex;
-    align-items: center;
-  }
-  
-  /* Để làm cho combobox nhỏ hơn */
-  .small-combobox {
-    width: 350px;
-  }
-  
-  .small-textbox {
-    margin-left: 50px;
-    padding: 5px;
+
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding: 5px 30px 5px 10px;
     border: none;
-    border-bottom: 1px dotted #fff;
+    border-bottom: 1px solid transparent;
     background-color: transparent;
+    font-size: 14px;
+    font-weight: bold;
+    color: red;
+    width: 100%;
+    text-indent: 10px;
+    margin-top: -35px;
+
+    &:after {
+      content: '\25BC';
+      position: absolute;
+      top: 0;
+      right: 0;
+      pointer-events: none;
+    }
+
+    &::-ms-expand {
+      display: none;
+    }
+
+    &:focus {
+      outline: none;
+      border-bottom: 1px solid transparent;
+    }
   }
-  
-  .small-button {
-    margin-left: 10px;
-    padding: 5px 10px;
+
+
+  .right-text {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .right-text div strong {
+    margin-bottom: 1px;
+  }
+
+  .right-text input[type="text"] {
     border: none;
-    background-color: #007BFF;
-    color: #fff;
-    cursor: pointer;
+    padding: 5px;
+    transition: border 0.3s;
+    width: 600px;
+    background-color: transparent;
+    flex: 1;
+    margin-top: 0px;
+    margin-right: 10px;
+    margin-left: 0px;
   }
-  
+
+  .right-text input[type="text"]:focus {
+    outline: none;
+  }
+
+
+  .supplier-selection {
+    align-self: flex-start;
+    margin-top: 0px;
+    width: 100%;
+
+    label {
+      font-weight: bold;
+      display: block;
+    }
+  }
+
+  .price-table {
+    width: 100%;
+    margin-top: 10px;
+    text-align: center;
+    align-self: center;
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+
+      th,
+      td,
+
+      th {
+        background-color: #f2f2f2;
+      }
+
+      tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      tr:hover {
+        background-color: #ddd;
+      }
+
+      img {
+        max-width: 50px;
+        height: auto;
+      }
+    }
+  }
+}
+
+.center-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.small-combobox-container {
+  flex: 0.2;
+}
+
+.centered-content {
+  display: flex;
+  align-items: center;
+}
+
+.small-combobox {
+  width: auto;
+  max-width: 100%;
+}
+
+.small-textbox {
+  margin-left: 50px;
+  padding: 5px;
+  border: none;
+  border-bottom: 1px dotted #fff;
+  background-color: transparent;
+}
+
+.small-button {
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: none;
+  background-color: #007BFF;
+  color: #fff;
+  cursor: pointer;
+}

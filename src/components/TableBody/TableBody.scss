@@ -1,0 +1,149 @@
+.table-body {
+    justify-content: space-between;
+    background-color: #ffffff;
+    padding: 0;
+    width: 100%;
+    font-weight: normal;
+    border-collapse: collapse;
+  
+    .table-cell {
+      text-align: center;
+      padding: 10px; /* Điều chỉnh padding theo ý muốn */
+      border: 1px solid #000; /* Điều chỉnh border theo ý muốn */
+      box-sizing: border-box; /* Sử dụng box-sizing để tính toán kích thước */
+    }
+
+    .product {
+        width: 8.7%;
+    }
+
+    .description {
+        width: 18.8%;
+    }
+
+    .size-item {
+        width: 5.2%;
+    }
+
+    .unit {
+        width: 5.2%;
+    }
+
+    .weight {
+        width: 5.2%;
+    }
+
+    .price {
+        width: 7.8%;
+    }
+
+    .total {
+        width: 10.7%;
+    }
+
+    .note {
+        width: 10.7%;
+    }
+
+    .reference-image {
+        width: 17.3%;
+    }
+}
+
+/* Thêm CSS cho nút "Thêm hàng" và biểu tượng dấu cộng */
+.add-row-button {
+    background-color: #ffffff;
+    color: #007BFF;
+    border: none;
+    padding: 5px 200px; /* Điều chỉnh padding theo ý muốn */
+    border-radius: 5px;
+    border: 1px solid #007BFF;
+    border-color: #007BFF;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Canh giữa theo chiều ngang */
+    margin: 5px auto; /* Canh giữa theo chiều dọc và giữa màn hình */
+  }
+  
+  .add-row-button i {
+    margin-right: 5px;
+    font-size: 18px;
+  }
+  
+  .add-row-button:hover {
+    //background-color: #0056b3;
+  }
+
+  .size-item {
+    width: 5.2%;
+    border: none; /* Loại bỏ border */
+    padding: 0; /* Loại bỏ padding */
+  }
+  
+  /* Hoặc nếu bạn muốn giữ lại padding nhưng muốn loại bỏ border và điều chỉnh kích thước */
+  .size-item input {
+    width: 50px; /* Điều chỉnh kích thước */
+    border: none; /* Loại bỏ border */
+  }
+
+  .table-footer {
+    width: 100%;
+    margin-top: 0px; /* Khoảng cách giữa bảng chính và bảng footer */
+    border-collapse: collapse;
+    background-color: #f7f7f7;
+  }
+  
+  .table-footer td {
+    //border: 1px solid #ccc; /* Border cho các ô trong bảng */
+    padding: 8px;
+    text-align: center;
+  }
+  
+  .table-footer .footer-title {
+    font-weight: bold; /* Đặt đậm cho tiêu đề */
+    background-color: #e6e6e6; /* Màu nền cho tiêu đề */
+  }
+  
+  .table-footer .footer-total {
+    background-color: #f2f2f2; /* Màu nền cho cột tổng giá tiền */
+  }
+  .footer-title{
+    width: 61.3%;
+  }
+  .footer-total{
+    width: 10.7%;
+  }
+
+  /* Menu ngữ cảnh */
+.context-menu {
+    position: absolute;
+    text-align: center;
+    background-color: #fff;
+    height: 20px;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
+    padding: 0px;
+    z-index: 1000;
+    min-width: 50px; /* Điều chỉnh kích thước menu theo ý muốn */
+    display: block;
+    align-items: center;
+  }
+  
+  /* Các mục trong menu */
+  .context-menu > div {
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .context-menu > div:hover {
+    background-color: #f5f5f5;
+  }
+  
+
+  
+
+
+  
+  
