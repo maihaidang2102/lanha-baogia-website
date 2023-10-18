@@ -5,6 +5,8 @@ import TableHeader from '../TableHeader/TableHeader';
 import TableBody from '../TableBody/TableBody';
 import jsPDF from 'jspdf';
 import html2pdf from 'html2pdf.js';
+import PromotionTable from '../Promotions/Promotions';
+import html2canvas from 'html2canvas';
 
 
 class QuotationForm extends Component {
@@ -36,25 +38,35 @@ class QuotationForm extends Component {
     this.setState((prevState) => ({ tables: [...prevState.tables, newTable] }));
   };
 
+
   exportToPDF = () => {
-    const element = document.body; // Chọn phần tử để xuất PDF (toàn bộ trang web)
-    const options = { margin: 10, filename: 'trang-web.pdf', image: { type: 'jpeg', quality: 0.98 } };
+    const element = document.getElementById('dangpro');
+    const options = {
+      margin: 10,
+      filename: 'trang-web.pdf',
+      image: { type: 'jpeg', quality: 1 },
+      pagebreak: { mode: ['css', 'legacy', 'block'] }, // Thêm tùy chọn phân trang
+    };
   
     // Sử dụng thư viện html2pdf để xuất toàn bộ trang web thành tệp PDF
-    html2pdf().from(element).set(options).outputPdf((pdf) => {
-      const blob = new Blob([pdf], { type: 'application/pdf' });
-      const link = document.createElement('a');
-      link.href = window.URL.createObjectURL(blob);
-      link.download = 'trang-web.pdf';
-      link.click();
-    });
+    html2pdf()
+      .from(element)
+      .set(options)
+      .outputPdf(pdf => {
+        const blob = new Blob([pdf], { type: 'application/pdf' });
+        const link = document.createElement('a');
+        link.href = window.URL.createObjectURL(blob);
+        link.download = 'trang-web.pdf';
+        link.click();
+      });
   };
   
+ 
 
 
   render() {
     return (
-      <div className="quotation-form">
+      <div className="quotation-form" id='dangpro'>
         <div className="logo">
           <img src={logo} alt="Your Logo" />
         </div>
@@ -134,6 +146,7 @@ class QuotationForm extends Component {
           <TableHeader />
           <TableBody />
           <button onClick={this.exportToPDF}>Xuất PDF</button>
+          <PromotionTable/>
       </div>
     );
   }
