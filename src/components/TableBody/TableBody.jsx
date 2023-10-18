@@ -1,4 +1,5 @@
 import React, { useState , useEffect } from 'react';
+import Select from 'react-select';
 import './TableBody.scss';
 
 const TableBody = () => {
@@ -10,17 +11,17 @@ const TableBody = () => {
       weight: 'Khối lượng 1',
       price: '100',
       total: 'Thành tiền 1',
-      note: 'Ghi chú 1',
+      note: 'Ghi chú 15311332',
       referenceImage: 'Hình ảnh 1',
     },
     {
-      name: 'Sản phẩm 2',
+      name: 'Sản phẩm mai hải đăng dz',
       description: 'Mô tả 2',
       unit: 'Đơn vị 2',
       weight: 'Khối lượng 2',
       price: '200',
       total: 'Thành tiền 2',
-      note: 'Ghi chú 2',
+      note: 'Thuộc tính white-space: pre-wrap; cho phép nội dung tự động xuống hàng khi nó dài hơn độ rộng của cột mà không làm thay đổi kích thước của cột. Điều này đã được sử dụng chính xác trong mã của bạn.',
       referenceImage: 'Hình ảnh 2',
     },
     {
@@ -34,16 +35,67 @@ const TableBody = () => {
       referenceImage: 'Hình ảnh 3',
     },
   ];
-  const calculateTotal = (length, width, height, price) => {
-    const numericLength = parseFloat(length) || 0;
-    const numericWidth = parseFloat(width) || 0;
-    const numericHeight = parseFloat(height) || 0;
-    const numericPrice = parseFloat(price) || 0;
 
-    const total = numericLength * numericWidth * numericHeight * numericPrice;
+  const [apiResponse, setApiResponse] = useState(null);
 
-    return total;
+
+  const [apiProducts, setApiProducts] = useState([]);
+  useEffect(() => {
+    // Gọi API và lấy dữ liệu từ API
+    // Sử dụng fetch hoặc axios để gọi API, sau đó cập nhật state apiProducts
+    fetch('https://api.lanha.vn/api/v1/quote/products')
+      .then(response => response.json())
+      .then(data => {
+        console.log(data); // In dữ liệu từ API ra console
+        setApiProducts(data.data);
+        setApiResponse(data);
+      })
+      .catch(error => console.error(error));
+  }, []);
+
+  const { Parser } = require('expr-eval');
+
+// Hàm tính toán giá dựa trên công thức
+const calculateWeight = (product, length, width, height) => {
+  // Tạo một trình phân tích biểu thức
+  const parser = new Parser();
+  
+  // Tạo ngữ cảnh biểu thức với các biến (Dài, Rộng, Cao) và giá trị tương ứng
+  const context = {
+    Dài: length,
+    Rộng: width,
+    Cao: height,
   };
+  
+  // Parse và tính toán biểu thức
+  const weight = parser.parse(product.formulaQuantity).evaluate(context);
+  
+  return weight;
+};
+
+  
+
+const calculateTotal = (product, length, width, height, weight, price) => {
+  const parser = new Parser();
+
+  // Lấy công thức tương ứng với sản phẩm
+  const formula = product.formulaPrice;
+
+  // Tạo ngữ cảnh biểu thức với các biến (Dài, Rộng, Cao, Khối_lượng, Đơn_giá) và giá trị tương ứng
+  const context = {
+    Dài: length,
+    Rộng: width,
+    Cao: height,
+    'Khối lượng': weight,
+    'Đơn_giá': price,
+  };
+
+  // Parse và tính toán công thức
+  const total = parser.parse(formula).evaluate(context);
+
+  return total;
+};
+
 
   const [contextMenuIndex, setContextMenuIndex] = useState(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ top: 0, left: 0 });
@@ -144,14 +196,6 @@ const TableBody = () => {
   }, [tableData]);
 
   useEffect(() => {
-    const updatedTableData = tableData.map((row) => ({
-      ...row,
-      total: calculateTotal(row.length, row.width, row.height, row.price).toString(),
-    }));
-    setTableData(updatedTableData);
-  }, [tableData]);
-
-  useEffect(() => {
     const handleDocumentClick = (e) => {
       if (!e.target.closest('.table-row')) {
         closeContextMenu();
@@ -190,17 +234,32 @@ const TableBody = () => {
     updatedTableData[index].product = selectedProduct;
     updatedTableData[index].description = selectedProduct.description;
     updatedTableData[index].unit = selectedProduct.unit;
-    updatedTableData[index].weight = selectedProduct.weight;
     updatedTableData[index].price = selectedProduct.price;
-    updatedTableData[index].total = selectedProduct.total;
-    updatedTableData[index].note = selectedProduct.note;
-    updatedTableData[index].referenceImage = selectedProduct.referenceImage;
+    const length = updatedTableData[index].length;
+    const width = updatedTableData[index].width;
+    const height = updatedTableData[index].height;
+
+    // Tính toán giá mới sử dụng calculatePrice
+    const weight = calculateWeight(selectedProduct, length, width, height);
+    
+    updatedTableData[index].weight = weight.toString();
     setTableData(updatedTableData);
   };
 
   const handleInputChange = (index, field, value) => {
     const updatedTableData = [...tableData];
     updatedTableData[index][field] = value;
+    const product = updatedTableData[index].product;
+
+  // Lấy các giá trị kích thước hiện tại từ dữ liệu bảng
+  const length = updatedTableData[index].length;
+  const width = updatedTableData[index].width;
+  const height = updatedTableData[index].height;
+
+  // Tính toán giá mới sử dụng calculatePrice
+  const weight = calculateWeight(product, length, width, height);
+
+  updatedTableData[index].weight = weight.toString();
     setTableData(updatedTableData);
   };
 
@@ -211,19 +270,20 @@ const TableBody = () => {
           {tableData.map((row, index) => (
             <tr key={index} onContextMenu={(e) => handleContextMenu(e, index)} onClick={closeContextMenu} className="table-row" onMouseEnter={() => handleMouseEnter(index)}>
               <td className="table-cell product">
-                <select
-                  value={row.product.name}
-                  onChange={(e) => {
-                    const selectedProduct = products.find(p => p.name === e.target.value);
-                    handleProductChange(index, selectedProduct);
-                  }}
-                >
-                  {products.map(product => (
-                    <option key={product.name} value={product.name}>
-                      {product.name}
-                    </option>
-                  ))}
-                </select>
+              <select
+  value={row.product._id} // Sử dụng _id để đối chiếu sản phẩm
+  onChange={(e) => {
+    const selectedProduct = apiProducts.find(product => product._id === e.target.value);
+    handleProductChange(index, selectedProduct);
+  }}
+>
+  {apiProducts.map(product => (
+    <option key={product._id} value={product._id}>
+      {product.name}
+    </option>
+  ))}
+</select>
+
               </td>
               <td className="table-cell description">{row.description}</td>
               <td className="table-cell size-item">

@@ -15,10 +15,13 @@
 
     .product {
         width: 8.7%;
+        white-space: pre-wrap;
     }
 
-    .description {
+    .description,
+    .note {
         width: 18.8%;
+        white-space: pre-wrap;
     }
 
     .size-item {

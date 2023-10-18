@@ -4,6 +4,7 @@ import "./QuotationForm.scss";
 import TableHeader from '../TableHeader/TableHeader';
 import TableBody from '../TableBody/TableBody';
 import jsPDF from 'jspdf';
+import { fetchTrademarks } from '../../utils/apiService';
 import html2pdf from 'html2pdf.js';
 import PromotionTable from '../Promotions/Promotions';
 import html2canvas from 'html2canvas';
@@ -20,8 +21,23 @@ class QuotationForm extends Component {
       customerAddress: '',
       date: this.getCurrentDate(),
       tables: [],
+      supplierNames: [],
     };
   }
+
+  async componentDidMount() {
+    try {
+      const data = await fetchTrademarks();
+      if (data) {
+        // Lấy danh sách tên thương hiệu từ response
+        const supplierNames = data.map((supplier) => supplier.name);
+        this.setState({ supplierNames });
+      }
+    } catch (error) {
+      console.error('Lỗi khi truy cập API:', error);
+    }
+  }
+
   getCurrentDate = () => {
     const today = new Date();
     const mm = String(today.getMonth() + 1).padStart(2, '0');
@@ -39,27 +55,45 @@ class QuotationForm extends Component {
   };
 
 
+  // exportToPDF = () => {
+  //   const element = document.getElementById('dangpro');
+  //   const options = {
+  //     margin: 10,
+  //     filename: 'trang-web.pdf',
+  //     image: { type: 'jpeg', quality: 1 },
+  //     pagebreak: { mode: ['css', 'legacy', 'block'] }, // Thêm tùy chọn phân trang
+  //   };
+  
+  //   // Sử dụng thư viện html2pdf để xuất toàn bộ trang web thành tệp PDF
+  //   html2pdf()
+  //     .from(element)
+  //     .set(options)
+  //     .outputPdf(pdf => {
+  //       const blob = new Blob([pdf], { type: 'application/pdf' });
+  //       const link = document.createElement('a');
+  //       link.href = window.URL.createObjectURL(blob);
+  //       link.download = 'trang-web.pdf';
+  //       link.click();
+  //     });
+  // };
   exportToPDF = () => {
     const element = document.getElementById('dangpro');
+  
+    const pdf = new jsPDF({
+      orientation: 'p',
+      unit: 'mm',
+      format: 'a4',
+    });
+  
     const options = {
       margin: 10,
-      filename: 'trang-web.pdf',
-      image: { type: 'jpeg', quality: 1 },
-      pagebreak: { mode: ['css', 'legacy', 'block'] }, // Thêm tùy chọn phân trang
     };
   
-    // Sử dụng thư viện html2pdf để xuất toàn bộ trang web thành tệp PDF
-    html2pdf()
-      .from(element)
-      .set(options)
-      .outputPdf(pdf => {
-        const blob = new Blob([pdf], { type: 'application/pdf' });
-        const link = document.createElement('a');
-        link.href = window.URL.createObjectURL(blob);
-        link.download = 'trang-web.pdf';
-        link.click();
-      });
+    pdf.html(element, options, function() {
+      pdf.save('trang-web.pdf'); // Lưu tệp PDF với tên "trang-web.pdf"
+    });
   };
+  
   
  
 
@@ -135,10 +169,11 @@ class QuotationForm extends Component {
               className="small-combobox"
             >
               <option value="">Chọn thương hiệu nhà cung cấp</option>
-              <option value="supplier1">Nhà cung cấp 1</option>
-              <option value="supplier2">Nhà cung cấp 2</option>
-              <option value="supplier3">Nhà cung cấp 3</option>
-              <option value="supplier4">Nhà cung cấp 4</option>
+              {this.state.supplierNames.map((name, index) => (
+                <option key={index} value={name}>
+                  {name}
+                </option>
+              ))}
             </select>
           </div>
         </div>
