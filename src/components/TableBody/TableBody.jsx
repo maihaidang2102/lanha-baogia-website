@@ -2,41 +2,11 @@ import React, { useState , useEffect } from 'react';
 import Select from 'react-select';
 import './TableBody.scss';
 
-const TableBody = () => {
-  const products = [
-    {
-      name: 'Sản phẩm 1',
-      description: 'Mô tả 1',
-      unit: 'Đơn vị 1',
-      weight: 'Khối lượng 1',
-      price: '100',
-      total: 'Thành tiền 1',
-      note: 'Ghi chú 15311332',
-      referenceImage: 'Hình ảnh 1',
-    },
-    {
-      name: 'Sản phẩm mai hải đăng dz',
-      description: 'Mô tả 2',
-      unit: 'Đơn vị 2',
-      weight: 'Khối lượng 2',
-      price: '200',
-      total: 'Thành tiền 2',
-      note: 'Thuộc tính white-space: pre-wrap; cho phép nội dung tự động xuống hàng khi nó dài hơn độ rộng của cột mà không làm thay đổi kích thước của cột. Điều này đã được sử dụng chính xác trong mã của bạn.',
-      referenceImage: 'Hình ảnh 2',
-    },
-    {
-      name: 'Sản phẩm 3',
-      description: 'Mô tả 3',
-      unit: 'Đơn vị 3',
-      weight: 'Khối lượng 3',
-      price: '300',
-      total: 'Thành tiền 3',
-      note: 'Ghi chú 3',
-      referenceImage: 'Hình ảnh 3',
-    },
-  ];
-
+const TableBody = (props) => {
   const [apiResponse, setApiResponse] = useState(null);
+
+  const supplierNames = props.supplierNames;
+  console.log(supplierNames);
 
 
   const [apiProducts, setApiProducts] = useState([]);
@@ -55,47 +25,31 @@ const TableBody = () => {
 
   const { Parser } = require('expr-eval');
 
-// Hàm tính toán giá dựa trên công thức
 const calculateWeight = (product, length, width, height) => {
-  // Tạo một trình phân tích biểu thức
   const parser = new Parser();
-  
-  // Tạo ngữ cảnh biểu thức với các biến (Dài, Rộng, Cao) và giá trị tương ứng
   const context = {
     Dài: length,
     Rộng: width,
     Cao: height,
   };
-  
-  // Parse và tính toán biểu thức
   const weight = parser.parse(product.formulaQuantity).evaluate(context);
-  
   return weight;
 };
 
-  
-
 const calculateTotal = (product, length, width, height, weight, price) => {
-  const parser = new Parser();
-
-  // Lấy công thức tương ứng với sản phẩm
   const formula = product.formulaPrice;
 
-  // Tạo ngữ cảnh biểu thức với các biến (Dài, Rộng, Cao, Khối_lượng, Đơn_giá) và giá trị tương ứng
-  const context = {
-    Dài: length,
-    Rộng: width,
-    Cao: height,
-    'Khối lượng': weight,
-    'Đơn_giá': price,
-  };
+  const formulaWithReplacedVariables = formula
+    .replace('Dài', length)
+    .replace('Rộng', width)
+    .replace('Cao', height)
+    .replace('Khối lượng', weight)
+    .replace('Đơn giá', price);
 
-  // Parse và tính toán công thức
-  const total = parser.parse(formula).evaluate(context);
+  const total = eval(formulaWithReplacedVariables);
 
   return total;
 };
-
 
   const [contextMenuIndex, setContextMenuIndex] = useState(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ top: 0, left: 0 });
@@ -121,19 +75,21 @@ const calculateTotal = (product, length, width, height, weight, price) => {
   };
  
 
-  const [tableData, setTableData] = useState([{
-    product: products[0],
-    description: products[0].description,
-    unit: products[0].unit,
-    weight: products[0].weight,
-    price: products[0].price,
-    total: products[0].total,
-    note: products[0].note,
-    referenceImage: products[0].referenceImage,
-    length: '',
-    width: '',
-    height: '',
-  }]);
+  const [tableData, setTableData] = useState([
+    {
+      product: null,
+      description: '',
+      unit: '',
+      weight: '',
+      price: '',
+      total: '',
+      note: '',
+      referenceImage: '',
+      length: '',
+      width: '',
+      height: '',
+    },
+  ]);
 
   const [footerRows, setFooterRows] = useState([
     {
@@ -164,12 +120,10 @@ const calculateTotal = (product, length, width, height, weight, price) => {
     let totalPrice = 0;
 
     tableData.forEach((row) => {
-      const numericPrice = parseFloat(row.price) || 0;
-      const numericLength = parseFloat(row.length) || 0;
-      const numericWidth = parseFloat(row.width) || 0;
-      const numericHeight = parseFloat(row.height) || 0;
+      const numericTotal = parseFloat(row.total) || 0;
+      
 
-      totalPrice += numericPrice * numericLength * numericWidth * numericHeight;
+      totalPrice += numericTotal;
     });
 
     setFooterRows((prevFooterRows) =>
@@ -214,14 +168,14 @@ const calculateTotal = (product, length, width, height, weight, price) => {
     setTableData([
       ...tableData,
       {
-        product: products[0],
-        description: products[0].description,
-        unit: products[0].unit,
-        weight: products[0].weight,
-        price: products[0].price,
-        total: products[0].total,
-        note: products[0].note,
-        referenceImage: products[0].referenceImage,
+        product: null,
+        description: '',
+        unit: '',
+        weight: '',
+        price: '',
+        total: '',
+        note: '',
+        referenceImage: '',
         length: '',
         width: '',
         height: '',
@@ -229,37 +183,64 @@ const calculateTotal = (product, length, width, height, weight, price) => {
     ]);
   };
 
-  const handleProductChange = (index, selectedProduct) => {
-    const updatedTableData = [...tableData];
-    updatedTableData[index].product = selectedProduct;
-    updatedTableData[index].description = selectedProduct.description;
-    updatedTableData[index].unit = selectedProduct.unit;
-    updatedTableData[index].price = selectedProduct.price;
-    const length = updatedTableData[index].length;
-    const width = updatedTableData[index].width;
-    const height = updatedTableData[index].height;
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
 
-    // Tính toán giá mới sử dụng calculatePrice
-    const weight = calculateWeight(selectedProduct, length, width, height);
-    
-    updatedTableData[index].weight = weight.toString();
-    setTableData(updatedTableData);
+  const updateSelectedMaterials = (productId) => {
+    // Tìm sản phẩm có productId trong danh sách sản phẩm
+    const product = apiProducts.find((product) => product._id === productId);
+  
+    if (product) {
+      setSelectedMaterials(product.listMaterial);
+    } else {
+      setSelectedMaterials([]); // Nếu không tìm thấy sản phẩm, đặt danh sách vật liệu thành rỗng
+    }
   };
+  
+
+
+  const handleProductChange = (index, selectedProduct) => {
+    if (selectedProduct) {
+      const updatedTableData = [...tableData];
+      updatedTableData[index].product = selectedProduct;
+      updatedTableData[index].description = selectedProduct.description || '';
+      updatedTableData[index].unit = selectedProduct.unit || '';
+      updatedTableData[index].price = selectedProduct.price || '';
+      updatedTableData[index].note = selectedProduct.note || '';
+      updatedTableData[index].referenceImage = selectedProduct.referenceImage || '';
+      updatedTableData[index].weight = '';
+      updatedTableData[index].total = '';
+      updatedTableData[index].length = selectedProduct.size.width || '';
+      updatedTableData[index].width = selectedProduct.size.depth || '';
+      updatedTableData[index].height = selectedProduct.size.height || '';
+      updatedTableData[index].referenceImage = selectedProduct.imgUrl || '';
+
+      updatedTableData[index].materialOptions = selectedProduct.listMaterial.map((material) => ({
+        value: material.description,
+        label: material.description,
+        imgUrl: material.imgUrl,
+      }));
+      
+      setTableData(updatedTableData);
+    }
+  };
+  
 
   const handleInputChange = (index, field, value) => {
     const updatedTableData = [...tableData];
     updatedTableData[index][field] = value;
     const product = updatedTableData[index].product;
 
-  // Lấy các giá trị kích thước hiện tại từ dữ liệu bảng
-  const length = updatedTableData[index].length;
-  const width = updatedTableData[index].width;
-  const height = updatedTableData[index].height;
-
-  // Tính toán giá mới sử dụng calculatePrice
+  const length = updatedTableData[index].length || 0;
+  const width = updatedTableData[index].width || 0;
+  const height = updatedTableData[index].height || 0;
   const weight = calculateWeight(product, length, width, height);
 
   updatedTableData[index].weight = weight.toString();
+  const price = parseFloat(updatedTableData[index].price) || 0;
+  const total = calculateTotal(product, length, width, height, weight, price);
+
+  updatedTableData[index].total = total.toString();
     setTableData(updatedTableData);
   };
 
@@ -270,22 +251,41 @@ const calculateTotal = (product, length, width, height, weight, price) => {
           {tableData.map((row, index) => (
             <tr key={index} onContextMenu={(e) => handleContextMenu(e, index)} onClick={closeContextMenu} className="table-row" onMouseEnter={() => handleMouseEnter(index)}>
               <td className="table-cell product">
-              <select
-  value={row.product._id} // Sử dụng _id để đối chiếu sản phẩm
-  onChange={(e) => {
-    const selectedProduct = apiProducts.find(product => product._id === e.target.value);
-    handleProductChange(index, selectedProduct);
-  }}
->
-  {apiProducts.map(product => (
-    <option key={product._id} value={product._id}>
-      {product.name}
-    </option>
-  ))}
-</select>
-
+              <select className="select__control"
+                  value={row.product ? row.product._id : ''} // Sử dụng _id để đối chiếu sản phẩm
+                  onChange={(e) => {
+                    const selectedProduct = apiProducts.find((product) => product._id === e.target.value);
+                    handleProductChange(index, selectedProduct);
+                  }}
+                >
+                  <option value="">-- Chọn sản phẩm --</option>
+                  {apiProducts.map((product) => (
+                    <option key={product._id} value={product._id}>
+                      {product.name}
+                    </option>
+                  ))}
+                </select>
               </td>
-              <td className="table-cell description">{row.description}</td>
+              <td className="table-cell description">
+              <select
+              className="custom-description-select" // Thêm lớp CSS tùy chỉnh
+              value={row.description} // Đặt giá trị `value` cho select
+              onChange={(e) => {
+                // Lấy giá trị đã chọn và tìm ảnh tương ứng
+                const selectedValue = e.target.value;
+                const selectedOption = row.materialOptions.find((option) => option.value === selectedValue);
+                handleInputChange(index, 'description', selectedValue); // Cập nhật mô tả
+                handleInputChange(index, 'referenceImage', selectedOption ? selectedOption.imgUrl : ''); // Cập nhật ảnh
+              }}
+            >
+              <option value="">-- Chọn mô tả --</option>
+              {row.materialOptions && row.materialOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+            </select>
+              </td>
               <td className="table-cell size-item">
                 <input
                   type="text"
@@ -312,7 +312,10 @@ const calculateTotal = (product, length, width, height, weight, price) => {
               <td className="table-cell price">{row.price}</td>
               <td className="table-cell total">{row.total}</td>
               <td className="table-cell note">{row.note}</td>
-              <td className="table-cell reference-image">{row.referenceImage}</td>
+              <td className="table-cell reference-image">
+  <img src={`https://api.lanha.vn/profiles/icon-img/${row.referenceImage}`} alt="Ảnh mô tả" />
+</td>
+
             </tr>
           ))}
         </tbody>

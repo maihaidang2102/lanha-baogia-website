@@ -8,13 +8,16 @@
   
     .table-cell {
       text-align: center;
-      padding: 10px; /* Điều chỉnh padding theo ý muốn */
+      padding-top: 5px;
+      padding-bottom: 5px;
+      white-space: pre-wrap;
       border: 1px solid #000; /* Điều chỉnh border theo ý muốn */
       box-sizing: border-box; /* Sử dụng box-sizing để tính toán kích thước */
     }
 
     .product {
         width: 8.7%;
+        text-align: start;
         white-space: pre-wrap;
     }
 
@@ -26,6 +29,7 @@
 
     .size-item {
         width: 5.2%;
+        text-align: center;
     }
 
     .unit {
@@ -86,8 +90,16 @@
   
   /* Hoặc nếu bạn muốn giữ lại padding nhưng muốn loại bỏ border và điều chỉnh kích thước */
   .size-item input {
-    width: 50px; /* Điều chỉnh kích thước */
+    width: 90%; /* Điều chỉnh kích thước */
     border: none; /* Loại bỏ border */
+    text-align: center;
+    border-bottom: 1px dotted #060607; /* Thêm gạch chân dưới ô input */
+    transition: border-bottom 0.2s;
+  }
+  .size-item input:focus {
+    outline: none; /* Loại bỏ viền khi ô input được focus */
+    border-color: #007BFF; /* Thay đổi màu border khi ô input được focus */
+    border-bottom: 2px solid #007BFF; /* Thay đổi gạch chân thành đường kẻ đứng khi ô input được focus */
   }
 
   .table-footer {
@@ -143,10 +155,34 @@
   .context-menu > div:hover {
     background-color: #f5f5f5;
   }
+  .select__control {
+    white-space: normal;
+    border: none;
+    text-align: start;
+    width: 100%;
+  }
   
-
+  .table-cell.reference-image {
+    width: 17.3%;
+    /* Thêm max-width và max-height để giữ kích thước tỷ lệ của hình ảnh */
+    max-width: 100%;
+    max-height: 100%;
+  }
   
-
-
+  .table-cell.reference-image img {
+    /* Thêm width và height để hình ảnh tự động scale theo kích thước của ô */
+    width: 100%;
+    height: auto;
+  }
+  .custom-description-select {
+    width: 100%; /* Điều chỉnh chiều rộng */
+    white-space: pre-wrap;
+    background-color: #f0f0f0;
+    font-size: 14px;
+  }
   
+  
+  .custom-description-select:hover {
+    background-color: #e0e0e0; /* Màu nền khi hover */
+  }
   

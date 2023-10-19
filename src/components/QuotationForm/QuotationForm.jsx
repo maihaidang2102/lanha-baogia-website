@@ -179,7 +179,7 @@ class QuotationForm extends Component {
         </div>
 
           <TableHeader />
-          <TableBody />
+          <TableBody supplierNames={this.state.supplierNames} />
           <button onClick={this.exportToPDF}>Xuất PDF</button>
           <PromotionTable/>
       </div>
