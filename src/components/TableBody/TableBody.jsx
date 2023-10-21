@@ -5,9 +5,9 @@ import './TableBody.scss';
 const TableBody = (props) => {
   const [apiResponse, setApiResponse] = useState(null);
 
-  const supplierNames = props.supplierNames;
-  console.log(supplierNames);
-
+  const supplierId = props.supplierId;
+  console.log(supplierId);
+  
 
   const [apiProducts, setApiProducts] = useState([]);
   useEffect(() => {
@@ -25,16 +25,16 @@ const TableBody = (props) => {
 
   const { Parser } = require('expr-eval');
 
-const calculateWeight = (product, length, width, height) => {
-  const parser = new Parser();
-  const context = {
-    Dài: length,
-    Rộng: width,
-    Cao: height,
-  };
-  const weight = parser.parse(product.formulaQuantity).evaluate(context);
+function calculateWeight(product, length, width, height) {
+  const processedFormula = product.formulaQuantity
+      .replace(new RegExp("Cao", "g"), height)
+      .replace(new RegExp("Rộng", "g"), width)
+      .replace(new RegExp("Dài", "g"), length)
+      .replace(new RegExp("Khối lượng", "g"), length)
+  const weight = eval(processedFormula);
+
   return weight;
-};
+}
 
 const calculateTotal = (product, length, width, height, weight, price) => {
   const formula = product.formulaPrice;
@@ -200,31 +200,66 @@ const calculateTotal = (product, length, width, height, weight, price) => {
 
 
   const handleProductChange = (index, selectedProduct) => {
-    if (selectedProduct) {
-      const updatedTableData = [...tableData];
-      updatedTableData[index].product = selectedProduct;
-      updatedTableData[index].description = selectedProduct.description || '';
-      updatedTableData[index].unit = selectedProduct.unit || '';
-      updatedTableData[index].price = selectedProduct.price || '';
-      updatedTableData[index].note = selectedProduct.note || '';
-      updatedTableData[index].referenceImage = selectedProduct.referenceImage || '';
-      updatedTableData[index].weight = '';
-      updatedTableData[index].total = '';
-      updatedTableData[index].length = selectedProduct.size.width || '';
-      updatedTableData[index].width = selectedProduct.size.depth || '';
-      updatedTableData[index].height = selectedProduct.size.height || '';
-      updatedTableData[index].referenceImage = selectedProduct.imgUrl || '';
+  if (selectedProduct) {
+    const updatedTableData = [...tableData];
+    updatedTableData[index].product = selectedProduct;
 
-      updatedTableData[index].materialOptions = selectedProduct.listMaterial.map((material) => ({
-        value: material.description,
-        label: material.description,
-        imgUrl: material.imgUrl,
-      }));
-      
-      setTableData(updatedTableData);
+    if (selectedProduct.price) {
+      updatedTableData[index].price = selectedProduct.price;
+    } else {
+      updatedTableData[index].price = '';
     }
-  };
-  
+
+    updatedTableData[index].description = selectedProduct.description || '';
+    updatedTableData[index].unit = selectedProduct.unit || '';
+    updatedTableData[index].note = selectedProduct.note || '';
+    updatedTableData[index].referenceImage = selectedProduct.referenceImage || '';
+    updatedTableData[index].weight = '';
+    updatedTableData[index].total = '';
+    updatedTableData[index].length = selectedProduct.size.width || '';
+    updatedTableData[index].width = selectedProduct.size.depth || '';
+    updatedTableData[index].height = selectedProduct.size.height || '';
+    updatedTableData[index].referenceImage = selectedProduct.imgUrl || '';
+
+    updatedTableData[index].materialOptions = selectedProduct.listMaterial.map((material) => ({
+      value: material.material.description,
+      label: material.material.description,
+      materialList : material,
+      imgUrl: material.material.imgUrl,
+    }));
+
+    setTableData(updatedTableData);
+  }
+};
+
+const handleDescriptionChange = (index, selectedValue) => {
+  const updatedTableData = [...tableData];
+  updatedTableData[index].description = selectedValue;
+
+  const selectedProduct = updatedTableData[index].product;
+  console.log(selectedProduct);
+  console.log(selectedValue);
+
+  if (selectedValue && selectedValue.materialList.material.price) {
+    updatedTableData[index].price = selectedValue.materialList.material.price;
+  } else {
+    const supp = supplierId; 
+
+    if (supp) {
+      const material = selectedValue.materialList;
+      console.log(material);
+
+      if (material) {
+        const price = material.price.find(price => price.trademark === supp);
+        updatedTableData[index].price = price ? price.priceMoistureResistantMDF : '';
+      } else {
+        updatedTableData[index].price = '';
+      }
+    }
+  }
+
+  setTableData(updatedTableData);
+};
 
   const handleInputChange = (index, field, value) => {
     const updatedTableData = [...tableData];
@@ -274,6 +309,7 @@ const calculateTotal = (product, length, width, height, weight, price) => {
                 // Lấy giá trị đã chọn và tìm ảnh tương ứng
                 const selectedValue = e.target.value;
                 const selectedOption = row.materialOptions.find((option) => option.value === selectedValue);
+                handleDescriptionChange(index, row.materialOptions.find((option) => option.value === selectedValue));
                 handleInputChange(index, 'description', selectedValue); // Cập nhật mô tả
                 handleInputChange(index, 'referenceImage', selectedOption ? selectedOption.imgUrl : ''); // Cập nhật ảnh
               }}

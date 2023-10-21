@@ -16,22 +16,26 @@ class QuotationForm extends Component {
     this.state = {
       selectedSupplier: '',
       products: [],
+      supplierId: '',
       customerName: '',
       customerPhone: '',
       customerAddress: '',
       date: this.getCurrentDate(),
       tables: [],
-      supplierNames: [],
+      suppliers: [],
     };
   }
+
+  // printSupplierId = () => {
+  //   alert("ID của nhà cung cấp: " + this.state.supplierId);
+  // };
 
   async componentDidMount() {
     try {
       const data = await fetchTrademarks();
       if (data) {
         // Lấy danh sách tên thương hiệu từ response
-        const supplierNames = data.map((supplier) => supplier.name);
-        this.setState({ supplierNames });
+        this.setState({ suppliers: data });
       }
     } catch (error) {
       console.error('Lỗi khi truy cập API:', error);
@@ -163,15 +167,20 @@ class QuotationForm extends Component {
         </div>
         <div className="center-content">
           <div className="small-combobox-container">
-            <select
+          <select
               value={this.state.selectedSupplier}
-              onChange={(e) => this.setState({ selectedSupplier: e.target.value })}
+              onChange={(e) => {
+                const selectedSupplier = e.target.value;
+                const supplier = this.state.suppliers.find((s) => s.name === selectedSupplier);
+                const supplierId = supplier ? supplier._id : '';
+                this.setState({ selectedSupplier, supplierId }, this.printSupplierId);
+              }}
               className="small-combobox"
             >
               <option value="">Chọn thương hiệu nhà cung cấp</option>
-              {this.state.supplierNames.map((name, index) => (
-                <option key={index} value={name}>
-                  {name}
+              {this.state.suppliers.map((supplier, index) => (
+                <option key={index} value={supplier.name}>
+                  {supplier.name}
                 </option>
               ))}
             </select>
@@ -179,7 +188,7 @@ class QuotationForm extends Component {
         </div>
 
           <TableHeader />
-          <TableBody supplierNames={this.state.supplierNames} />
+          <TableBody supplierId={this.state.supplierId} />
           <button onClick={this.exportToPDF}>Xuất PDF</button>
           <PromotionTable/>
       </div>
