@@ -58,50 +58,6 @@ class QuotationForm extends Component {
     this.setState((prevState) => ({ tables: [...prevState.tables, newTable] }));
   };
 
-
-  // exportToPDF = () => {
-  //   const element = document.getElementById('dangpro');
-  //   const options = {
-  //     margin: 10,
-  //     filename: 'trang-web.pdf',
-  //     image: { type: 'jpeg', quality: 1 },
-  //     pagebreak: { mode: ['css', 'legacy', 'block'] }, // Thêm tùy chọn phân trang
-  //   };
-  
-  //   // Sử dụng thư viện html2pdf để xuất toàn bộ trang web thành tệp PDF
-  //   html2pdf()
-  //     .from(element)
-  //     .set(options)
-  //     .outputPdf(pdf => {
-  //       const blob = new Blob([pdf], { type: 'application/pdf' });
-  //       const link = document.createElement('a');
-  //       link.href = window.URL.createObjectURL(blob);
-  //       link.download = 'trang-web.pdf';
-  //       link.click();
-  //     });
-  // };
-  exportToPDF = () => {
-    const element = document.getElementById('dangpro');
-  
-    const pdf = new jsPDF({
-      orientation: 'p',
-      unit: 'mm',
-      format: 'a4',
-    });
-  
-    const options = {
-      margin: 10,
-    };
-  
-    pdf.html(element, options, function() {
-      pdf.save('trang-web.pdf'); // Lưu tệp PDF với tên "trang-web.pdf"
-    });
-  };
-  
-  
- 
-
-
   render() {
     return (
       <div className="quotation-form" id='dangpro'>
@@ -177,7 +133,7 @@ class QuotationForm extends Component {
               }}
               className="small-combobox"
             >
-              <option value="">Chọn thương hiệu nhà cung cấp</option>
+              <option value="">-- Chọn thương hiệu nhà cung cấp --</option>
               {this.state.suppliers.map((supplier, index) => (
                 <option key={index} value={supplier.name}>
                   {supplier.name}
@@ -189,7 +145,6 @@ class QuotationForm extends Component {
 
           <TableHeader />
           <TableBody supplierId={this.state.supplierId} />
-          <button onClick={this.exportToPDF}>Xuất PDF</button>
           <PromotionTable/>
       </div>
     );

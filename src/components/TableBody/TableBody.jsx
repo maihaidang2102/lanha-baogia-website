@@ -4,6 +4,20 @@ import './TableBody.scss';
 
 const TableBody = (props) => {
   const [apiResponse, setApiResponse] = useState(null);
+  const [isImageModalOpen, setImageModalOpen] = useState(false);
+  const [largeImageURL, setLargeImageURL] = useState('');
+
+  const openImageModal = (url) => {
+    setImageModalOpen(true);
+    setLargeImageURL(url);
+  };
+  const closeImageModal = () => {
+    setImageModalOpen(false);
+    setLargeImageURL(''); // Đặt URL thành rỗng để tắt ảnh lớn
+  };
+  
+
+
 
   const supplierId = props.supplierId;
   console.log(supplierId);
@@ -114,7 +128,32 @@ const calculateTotal = (product, length, width, height, weight, price) => {
     },
   ]);
 
-
+  useEffect(() => {
+    // Đảm bảo rằng `apiProducts` và `tableData` đã được cập nhật
+    if (apiProducts.length > 0 && tableData.length > 0) {
+      // Thực hiện tính toán giá trị `price` cho tất cả sản phẩm trong bảng
+      const updatedTableData = [...tableData];
+      updatedTableData.forEach((row) => {
+        const selectedProduct = row.product;
+        if (selectedProduct) {
+          const supp = supplierId; // Lấy giá trị `supplierId` mới
+          if (supp) {
+            const material = row.materialOptions.find((option) => option.value === row.description);
+            if (material) {
+              const price = material.materialList.price.find((price) => price.trademark === supp);
+              row.price = price ? price.priceValue : '';
+            } else {
+              row.price = '';
+            }
+          }
+        }
+      });
+  
+      setTableData(updatedTableData);
+      calculateTotalPrice();
+    }
+  }, [supplierId, apiProducts, tableData]);
+  
   
   const calculateTotalPrice = () => {
     let totalPrice = 0;
@@ -133,17 +172,17 @@ const calculateTotal = (product, length, width, height, weight, price) => {
     );
   };
 
-  const [showAddRowButton, setShowAddRowButton] = useState(false);
+  // const [showAddRowButton, setShowAddRowButton] = useState(false);
 
-  const handleMouseEnter = () => {
-    // Khi con trỏ chuột vào bảng, hiển thị nút "Thêm hàng"
-    setShowAddRowButton(true);
-  };
+  // const handleMouseEnter = () => {
+  //   // Khi con trỏ chuột vào bảng, hiển thị nút "Thêm hàng"
+  //   setShowAddRowButton(true);
+  // };
 
-  const handleMouseLeave = () => {
-    // Khi con trỏ chuột ra khỏi bảng, ẩn nút "Thêm hàng"
-    setShowAddRowButton(false);
-  };
+  // const handleMouseLeave = () => {
+  //   // Khi con trỏ chuột ra khỏi bảng, ẩn nút "Thêm hàng"
+  //   setShowAddRowButton(false);
+  // };
 
   useEffect(() => {
     calculateTotalPrice();
@@ -239,6 +278,7 @@ const handleDescriptionChange = (index, selectedValue) => {
   const selectedProduct = updatedTableData[index].product;
   console.log(selectedProduct);
   console.log(selectedValue);
+  // updatedTableData[index].referenceImage = selectedValue.imgUrl;
 
   if (selectedValue && selectedValue.materialList.material.price) {
     updatedTableData[index].price = selectedValue.materialList.material.price;
@@ -251,7 +291,7 @@ const handleDescriptionChange = (index, selectedValue) => {
 
       if (material) {
         const price = material.price.find(price => price.trademark === supp);
-        updatedTableData[index].price = price ? price.priceMoistureResistantMDF : '';
+        updatedTableData[index].price = price ? price.priceValue : '';
       } else {
         updatedTableData[index].price = '';
       }
@@ -280,11 +320,11 @@ const handleDescriptionChange = (index, selectedValue) => {
   };
 
   return (
-    <div onMouseLeave={handleMouseLeave} >
-      <table className="table-body" onMouseEnter={handleMouseEnter} >
+    <div  >
+      <table className="table-body"  >
         <tbody>
           {tableData.map((row, index) => (
-            <tr key={index} onContextMenu={(e) => handleContextMenu(e, index)} onClick={closeContextMenu} className="table-row" onMouseEnter={() => handleMouseEnter(index)}>
+            <tr key={index} onContextMenu={(e) => handleContextMenu(e, index)} onClick={closeContextMenu} className="table-row" >
               <td className="table-cell product">
               <select className="select__control"
                   value={row.product ? row.product._id : ''} // Sử dụng _id để đối chiếu sản phẩm
@@ -349,14 +389,19 @@ const handleDescriptionChange = (index, selectedValue) => {
               <td className="table-cell total">{row.total}</td>
               <td className="table-cell note">{row.note}</td>
               <td className="table-cell reference-image">
-  <img src={`https://api.lanha.vn/profiles/icon-img/${row.referenceImage}`} alt="Ảnh mô tả" />
+  <img
+    src={`https://api.lanha.vn/profiles/icon-img/${row.referenceImage}`}
+    alt="Ảnh mô tả"
+    onClick={() => {
+      openImageModal(`https://api.lanha.vn/profiles/icon-img/${row.referenceImage}`);
+    }}
+  />
 </td>
-
             </tr>
           ))}
         </tbody>
       </table>
-      {showAddRowButton && (
+      {(
         <button onClick={addRow} className="add-row-button">
           <i className="fas fa-plus"></i> +
         </button>
@@ -378,6 +423,19 @@ const handleDescriptionChange = (index, selectedValue) => {
           ))}
         </tbody>
       </table>
+      {isImageModalOpen && (
+  <div className="image-modal">
+    <div className="modal-content">
+      <span className="close" onClick={closeImageModal}>&times;</span>
+      <img
+        src={largeImageURL}
+        alt="Ảnh lớn"
+        className="large-image" // Thêm class "large-image" vào hình ảnh
+      />
+    </div>
+  </div>
+)}
+
     </div>
   );
 };
