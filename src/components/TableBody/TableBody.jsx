@@ -63,34 +63,46 @@ const TableBody = (props) => {
       const weight = eval(processedFormula);
       return weight;
     } else {
-      return 0; // Hoặc giá trị mặc định khác tùy thuộc vào logic của bạn
+      return 0; 
     }
   };
   
 
   const calculateUnit = (product, length, width, height) => {
-    // Thay thế biểu thức đơn vị bằng các biến liên quan
     const formula = product.unit
       .replace(new RegExp("Dài", "g"), length)
       .replace(new RegExp("Rộng", "g"), width)
       .replace(new RegExp("Cao", "g"), height);
   
-    // Thay thế biểu thức ba ngôi bằng kết quả
     const formulaWithValues = formula.replace(/\(([^)]+)\) \? "([^"]+)" : "([^"]+)"/, (_, condition, trueResult, falseResult) => {
-      const evalCondition = eval(condition); // Đánh giá biểu thức điều kiện
+      const evalCondition = eval(condition); 
       return evalCondition ? trueResult : falseResult;
     });
     console.log(formulaWithValues);
     try {
-      // Đánh giá công thức bằng cách sử dụng math.js
-      //const unit = math.evaluate(formulaWithValues);
       return formulaWithValues;
     } catch (error) {
       return "Công thức không hợp lệ";
     }
   };
-  
 
+  const calculatePrice = (product, length, width, height, weight) => {
+    if (product) {
+      //console.log(product);
+      let formula = product;
+      formula = formula.replace('Dài', length);
+      formula = formula.replace('Rộng', width);
+      formula = formula.replace('Cao', height);
+      formula = formula.replace('Khối lượng', weight);
+      const total = eval(formula);
+      //console.log(product);
+      return total;
+    } else {
+      return 0;
+    }
+};
+
+  
   const calculateTotal = (product, length, width, height, weight, price) => {
   if (product && product.formulaPrice) {
     const formula = product.formulaPrice
@@ -160,22 +172,23 @@ const TableBody = (props) => {
       const updatedTableData = [...tableData];
       updatedTableData.forEach((row) => {
         const selectedProduct = row.product;
+        const length = parseFloat(row.length) || 0;
+        const width = parseFloat(row.width) || 0;
+        const height = parseFloat(row.height) || 0;
+        const weight = calculateWeight(selectedProduct, length, width, height);
         if (selectedProduct) {
           const supp = supplierId;
           if (supp) {
             const material = row.materialOptions.find((option) => option.value === row.description);
             if (material) {
               const price = material.materialList.price.find((price) => price.trademark === supp);
-              row.price = price ? price.priceValue : '';
+              const priceVal = calculatePrice(price.priceValue,length,width,height,weight);
+              row.price = price ? priceVal : '';
             } else {
               row.price = '';
             }
           }
         }
-        const length = parseFloat(row.length) || 0;
-        const width = parseFloat(row.width) || 0;
-        const height = parseFloat(row.height) || 0;
-        const weight = calculateWeight(selectedProduct, length, width, height);
         const price = parseFloat(row.price) || 0;
         const total = calculateTotal(selectedProduct, length, width, height, weight, price);
       });
@@ -508,7 +521,10 @@ const TableBody = (props) => {
           {footerRows.map((row, index) => (
             <tr key={index}>
               <td className="footer-title">{row.title}</td>
-              <td className="footer-total">{row.total}</td>
+              <td className="footer-total">{Number(row.total).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+              })}</td>
               <td className="footer-note"></td>
               <td className="footer-totdescriptional"></td>
             </tr>
