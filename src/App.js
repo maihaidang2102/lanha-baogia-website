@@ -37,7 +37,23 @@ function App() {
       <div ref={pdfRef}>
         <QuotationForm />
       </div>
-      <button onClick={() => openPDF(pdfRef.current)}>Xuất PDF</button>
+      <button
+        onClick={() => openPDF(pdfRef.current)}
+        style={{
+          position: 'fixed',
+          bottom: '10px',
+          right: '10px',
+          zIndex: 1,
+          background: '#ff9c04',  // Màu nền là màu vàng
+          color: 'white',         // Màu chữ là màu trắng
+          borderRadius: '50%',     // Bo tròn
+          padding: '10px 20px',    // Điều chỉnh kích thước
+          border: 'none',         // Loại bỏ đường viền
+          cursor: 'pointer', // Đảm bảo nút hiển thị trên nội dung
+        }}
+      >
+        Xuất PDF
+      </button>
     </div>
   );
 }

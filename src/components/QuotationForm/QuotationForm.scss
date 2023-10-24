@@ -162,11 +162,13 @@
   color: #fd0606;
   margin-bottom: 5px;
   transition: border-color 0.3s;
+  // Nếu bạn muốn thêm styles cho dropdown active, bạn có thể thêm dưới đây
 }
 
 .small-combobox:focus {
   outline: none;
   border-color: #007BFF;
+  // Styles cho combobox khi focus
 }
 
 
@@ -186,3 +188,66 @@
   color: #fff;
   cursor: pointer;
 }
+
+.selected-option {
+  border: 1px solid #fffdfd;
+  padding: 5px;
+  cursor: pointer;
+  border-radius: 5px 0 0 5px;
+}
+
+/* Style for the dropdown container */
+.dropdown-container {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+/* Style for the dropdown button */
+.dropdown-button {
+  max-width: 14%;
+  padding: 10px;
+  background-color: #fffafa;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: left;
+  position: relative;
+}
+
+/* Style for the dropdown content */
+.dropdown-content {
+  //display: none;
+  position: absolute;
+  background-color: #fffafa;
+  border: 1px solid #fffdfd;
+  font-weight: bold;
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+  z-index: 1;
+  max-width:  14%;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Style for dropdown options */
+.dropdown-option {
+  padding: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+/* Highlight on hover */
+.dropdown-option:hover {
+  background-color: #ddd;
+}
+
+/* CSS cho biểu tượng mũi tên xuống */
+.dropdown-button::after {
+  content: " ▼"; /* Thêm biểu tượng Unicode ▼ */
+  margin-right: 5px; /* Khoảng cách giữa văn bản và biểu tượng */
+  font-size: 10px; /* Kích thước biểu tượng */
+}
+
+

@@ -11,6 +11,7 @@ import html2canvas from 'html2canvas';
 
 const QuotationForm = () => {
   const [selectedSupplier, setSelectedSupplier] = useState('');
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [supplierId, setSupplierId] = useState('');
   const [customerName, setCustomerName] = useState('');
@@ -51,6 +52,15 @@ const QuotationForm = () => {
     const newTable = <TableHeader key={tables.length} />;
     setTables((prevTables) => [...prevTables, newTable]);
   }
+
+  const handleSupplierSelect = (selectedSupplier) => {
+    const supplier = suppliers.find((s) => s.name === selectedSupplier);
+    const supplierId = supplier ? supplier._id : '';
+    setSelectedSupplier(selectedSupplier);
+    setSupplierId(supplierId);
+    setIsDropdownOpen(false);
+  };
+  
 
   return (
     <div className="quotation-form" id='dangpro'>
@@ -115,28 +125,28 @@ const QuotationForm = () => {
         </div>
       </div>
       <div className="center-content">
-        <div className="small-combobox-container">
-          <select
-            value={selectedSupplier}
-            onChange={(e) => {
-              const selectedSupplier = e.target.value;
-              const supplier = suppliers.find((s) => s.name === selectedSupplier);
-              const supplierId = supplier ? supplier._id : '';
-              setSelectedSupplier(selectedSupplier);
-              setSupplierId(supplierId);
-            }}
-            className="small-combobox"
+  <div className="dropdown-container">
+    <div
+      className="dropdown-button"
+      onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+    >
+      {selectedSupplier || 'Chọn thương hiệu nhà cung cấp'}
+    </div>
+    {isDropdownOpen && (
+      <div className="dropdown-content">
+        {suppliers.map((supplier, index) => (
+          <div
+            key={index}
+            className="dropdown-option"
+            onClick={() => handleSupplierSelect(supplier.name)}
           >
-            <option value="">-- Chọn thương hiệu nhà cung cấp --</option>
-            {suppliers.map((supplier, index) => (
-              <option key={index} value={supplier.name}>
-                {supplier.name}
-              </option>
-            ))}
-          </select>
-        </div>
+            {supplier.name}
+          </div>
+        ))}
       </div>
-
+    )}
+  </div>
+</div>
       <TableHeader />
       <TableBody supplierId={supplierId} />
     </div>

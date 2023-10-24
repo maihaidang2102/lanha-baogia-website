@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './TableBody.scss';
+import * as math from 'mathjs';
+
 
 const TableBody = (props) => {
   const [apiResponse, setApiResponse] = useState(null);
@@ -61,6 +63,29 @@ const TableBody = (props) => {
 
     return weight;
   }
+
+  const calculateUnit = (product, length, width, height) => {
+    // Thay thế biểu thức đơn vị bằng các biến liên quan
+    const formula = product.unit
+      .replace(new RegExp("Dài", "g"), length)
+      .replace(new RegExp("Rộng", "g"), width)
+      .replace(new RegExp("Cao", "g"), height);
+  
+    // Thay thế biểu thức ba ngôi bằng kết quả
+    const formulaWithValues = formula.replace(/\(([^)]+)\) \? "([^"]+)" : "([^"]+)"/, (_, condition, trueResult, falseResult) => {
+      const evalCondition = eval(condition); // Đánh giá biểu thức điều kiện
+      return evalCondition ? trueResult : falseResult;
+    });
+    console.log(formulaWithValues);
+    try {
+      // Đánh giá công thức bằng cách sử dụng math.js
+      //const unit = math.evaluate(formulaWithValues);
+      return formulaWithValues;
+    } catch (error) {
+      return "Công thức không hợp lệ";
+    }
+  };
+  
 
   const calculateTotal = (product, length, width, height, weight, price) => {
     const formula = product.formulaPrice;
@@ -198,6 +223,7 @@ const TableBody = (props) => {
         length: '',
         width: '',
         height: '',
+        isEditable: true,
       },
     ]);
   };
@@ -233,6 +259,16 @@ const TableBody = (props) => {
     setDescriptionDropdownOpen(updatedIsDescriptionDropdownOpen);
   };
   
+  const calculateUnit2 = (product) => {
+  
+    // Kiểm tra xem unit có chứa các trường "Dài", "Rộng", hoặc "Cao" hay không
+    if (product.unit.includes("Dài") || product.unit.includes("Rộng") || product.unit.includes("Cao")) {
+      return null; // Nếu có, trả về null
+    }else{
+      return product.unit;
+    }
+  };
+  
 
   const handleProductChange = (index, selectedProduct) => {
     if (selectedProduct) {
@@ -246,13 +282,19 @@ const TableBody = (props) => {
       } else {
         updatedTableData[index].price = '';
       }
+      
 
       const updatedSelectedProducts = [...selectedProducts];
       updatedSelectedProducts[index] = selectedProduct;
       setSelectedProducts(updatedSelectedProducts);
 
-      updatedTableData[index].description = selectedProduct.description || '';
-      updatedTableData[index].unit = selectedProduct.unit || '';
+      const selectedDescription = selectedProduct.description || 'Chọn mô tả';
+      updatedTableData[index].description = selectedDescription;
+      updatedTableData[index].selectedDescription = '';
+      console.log(selectedProduct.description);
+      const unit = calculateUnit2(selectedProduct);
+      updatedTableData[index].unit = unit;
+      //updatedTableData[index].unit = selectedProduct.unit || '';
       updatedTableData[index].note = selectedProduct.note || '';
       updatedTableData[index].referenceImage = selectedProduct.listMaterial.imgUrl || '';
       updatedTableData[index].weight = '';
@@ -329,6 +371,8 @@ const TableBody = (props) => {
     const width = updatedTableData[index].width || 0;
     const height = updatedTableData[index].height || 0;
     const weight = calculateWeight(product, length, width, height);
+    const unit = calculateUnit(product, length, width, height);
+    updatedTableData[index].unit = unit
 
     updatedTableData[index].weight = weight.toString();
     const price = parseFloat(updatedTableData[index].price) || 0;
