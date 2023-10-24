@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import logo from "../../assets/image/logo.png";
+import logo from "../../assets/image/logo.jpg";
 import "./QuotationForm.scss";
 import TableHeader from '../TableHeader/TableHeader';
 import TableBody from '../TableBody/TableBody';

@@ -53,16 +53,20 @@ const TableBody = (props) => {
 
   const { Parser } = require('expr-eval');
 
-  function calculateWeight(product, length, width, height) {
-    const processedFormula = product.formulaQuantity
-      .replace(new RegExp("Cao", "g"), height)
-      .replace(new RegExp("Rộng", "g"), width)
-      .replace(new RegExp("Dài", "g"), length)
-      .replace(new RegExp("Khối lượng", "g"), length);
-    const weight = eval(processedFormula);
-
-    return weight;
-  }
+  const calculateWeight = (product, length, width, height) => {
+    if (product && product.formulaQuantity) {
+      const processedFormula = product.formulaQuantity
+        .replace(new RegExp("Cao", "g"), height)
+        .replace(new RegExp("Rộng", "g"), width)
+        .replace(new RegExp("Dài", "g"), length)
+        .replace(new RegExp("Khối lượng", "g"), length);
+      const weight = eval(processedFormula);
+      return weight;
+    } else {
+      return 0; // Hoặc giá trị mặc định khác tùy thuộc vào logic của bạn
+    }
+  };
+  
 
   const calculateUnit = (product, length, width, height) => {
     // Thay thế biểu thức đơn vị bằng các biến liên quan
@@ -88,19 +92,20 @@ const TableBody = (props) => {
   
 
   const calculateTotal = (product, length, width, height, weight, price) => {
-    const formula = product.formulaPrice;
-
-    const formulaWithReplacedVariables = formula
+  if (product && product.formulaPrice) {
+    const formula = product.formulaPrice
       .replace('Dài', length)
       .replace('Rộng', width)
       .replace('Cao', height)
       .replace('Khối lượng', weight)
       .replace('Đơn giá', price);
-
-    const total = eval(formulaWithReplacedVariables);
-
+    const total = eval(formula);
     return total;
-  };
+  } else {
+    return 0; // Hoặc giá trị mặc định khác tùy thuộc vào logic của bạn
+  }
+};
+
 
   const [contextMenuIndex, setContextMenuIndex] = useState(null);
   const [contextMenuPosition, setContextMenuPosition] = useState({ top: 0, left: 0 });
@@ -167,6 +172,12 @@ const TableBody = (props) => {
             }
           }
         }
+        const length = parseFloat(row.length) || 0;
+        const width = parseFloat(row.width) || 0;
+        const height = parseFloat(row.height) || 0;
+        const weight = calculateWeight(selectedProduct, length, width, height);
+        const price = parseFloat(row.price) || 0;
+        const total = calculateTotal(selectedProduct, length, width, height, weight, price);
       });
 
       setTableData(updatedTableData);
@@ -320,8 +331,6 @@ const TableBody = (props) => {
     updatedTableData[index].selectedDescription = selectedValue;
 
     updatedTableData[index].description = selectedValue;
-
-
     const selectedProduct = updatedTableData[index].product;
     console.log(selectedProduct);
     console.log(selectedValue);
@@ -374,7 +383,7 @@ const TableBody = (props) => {
     const unit = calculateUnit(product, length, width, height);
     updatedTableData[index].unit = unit
 
-    updatedTableData[index].weight = weight.toString();
+    updatedTableData[index].weight = weight;
     const price = parseFloat(updatedTableData[index].price) || 0;
     const total = calculateTotal(product, length, width, height, weight, price);
 
@@ -431,29 +440,37 @@ const TableBody = (props) => {
             </td>
               <td className="table-cell size-item">
                 <input
-                  type="text"
+                  type="number"
                   value={row.length}
                   onChange={(e) => handleInputChange(index, 'length', e.target.value)}
                 />
               </td>
               <td className="table-cell size-item">
                 <input
-                  type="text"
+                  type="number"
                   value={row.width}
                   onChange={(e) => handleInputChange(index, 'width', e.target.value)}
                 />
               </td>
               <td className="table-cell size-item">
                 <input
-                  type="text"
+                  type="number"
                   value={row.height}
                   onChange={(e) => handleInputChange(index, 'height', e.target.value)}
                 />
               </td>
               <td className="table-cell unit">{row.unit}</td>
               <td className="table-cell weight">{row.weight}</td>
-              <td className="table-cell price">{row.price}</td>
-              <td className="table-cell total">{row.total}</td>
+              <td className="table-cell price">{Number(row.price).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+              })}</td>
+              <td className="table-cell total">
+              {Number(row.total).toLocaleString('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+              })}
+            </td>
               <td className="table-cell note">{row.note}</td>
               <td className="table-cell reference-image">
               <div className="image-container">
