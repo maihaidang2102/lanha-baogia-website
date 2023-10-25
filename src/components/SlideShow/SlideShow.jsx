@@ -20,10 +20,10 @@ const Slideshow = ({ imageUrls, onClose }) => {
 
   return (
     <div className="slideshow">
-      <div className="close-button" onClick={onClose}> <FontAwesomeIcon icon={faTimes} size='2x' /></div>
+      <div className="close-button" onClick={onClose}> <FontAwesomeIcon icon={faTimes} size='2x' color='#1c1b1a'/></div>
       <div className="slideshow-content">
       <div className="slide-control" onClick={prevSlide}>
-          <FontAwesomeIcon icon={faChevronLeft} size="2x" />
+          <FontAwesomeIcon icon={faChevronLeft} size="2x" color='#1c1b1a'/>
         </div>
         <img
           src={`https://api.lanha.vn/profiles/icon-img/${imageUrls[currentIndex]}`}
@@ -31,7 +31,7 @@ const Slideshow = ({ imageUrls, onClose }) => {
           className="slide"
         />
         <div className="slide-control" onClick={nextSlide}>
-          <FontAwesomeIcon icon={faChevronRight} size="2x" />
+          <FontAwesomeIcon icon={faChevronRight} size="2x" color='#1c1b1a' />
         </div>
       </div>
     </div>
