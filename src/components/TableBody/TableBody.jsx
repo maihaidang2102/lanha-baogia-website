@@ -1,41 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import './TableBody.scss';
+import Slideshow from '../SlideShow/SlideShow';
 import * as math from 'mathjs';
 
 
 const TableBody = (props) => {
   const [apiResponse, setApiResponse] = useState(null);
-  const [isImageModalOpen, setImageModalOpen] = useState(false);
-  const [largeImageURL, setLargeImageURL] = useState('');
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [slideshowImageUrls, setSlideshowImageUrls] = useState([]);
+  const [isSlideshowOpen, setIsSlideshowOpen] = useState(false);
 
-  const openImageModal = (url,index) => {
-    setImageModalOpen(true);
-    setLargeImageURL(url);
-    setCurrentImageIndex(index);
+  const openSlideshow = (imageUrls) => {
+    setSlideshowImageUrls(imageUrls);
+    setIsSlideshowOpen(true);
   };
 
-  const closeImageModal = () => {
-    setImageModalOpen(false);
-    setLargeImageURL('');
+  const closeSlideshow = () => {
+    setIsSlideshowOpen(false);
   };
-
-  const navigateToPreviousImage = () => {
-    if (currentImageIndex > 0) {
-      const newIndex = currentImageIndex - 1;
-      setLargeImageURL(tableData[newIndex].referenceImage);
-      setCurrentImageIndex(newIndex);
-    }
-  };
-  
-  const navigateToNextImage = () => {
-    if (currentImageIndex < tableData.length - 1) {
-      const newIndex = currentImageIndex + 1;
-      setLargeImageURL(tableData[newIndex].referenceImage);
-      setCurrentImageIndex(newIndex);
-    }
-  };
-  
 
   const supplierId = props.supplierId;
 
@@ -50,6 +31,24 @@ const TableBody = (props) => {
       })
       .catch((error) => console.error(error));
   }, []);
+
+  useEffect(() => {
+    const handleDocumentClick = (e) => {
+      if (isSlideshowOpen) {
+        if (e.target.closest('.slideshow-container')) {
+        closeSlideshow();
+      }
+      }
+      
+    };
+  
+    document.addEventListener('click', handleDocumentClick);
+  
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, []);
+  
 
   const { Parser } = require('expr-eval');
 
@@ -481,20 +480,17 @@ const TableBody = (props) => {
               <td className="table-cell reference-image">
               <div className="image-container">
             {Array.isArray(row.referenceImage) && row.referenceImage.length > 0 ? (
-            row.referenceImage.slice(0, 3).map((imgUrl, imgIndex) => (
+            row.referenceImage.slice(0, 1).map((imgUrl, imgIndex) => (
               <img
                 key={imgIndex}
                 className="reference-image-item"
-                style={{ width: "30%" }}
+                style={{ width: "50%" }}
                 src={`https://api.lanha.vn/profiles/icon-img/${imgUrl}`}
                 alt={`Ảnh mô tả ${imgIndex + 1}`}
-                onClick={() => openImageModal(`https://api.lanha.vn/profiles/icon-img/${imgUrl}`)}
+                onClick={() => openSlideshow(row.referenceImage)}
               />
             ))
           ) : null}
-            {Array.isArray(row.referenceImage) && row.referenceImage.length > 3 ? (
-              <div className="reference-image-overlay">+{row.referenceImage.length - 3} ảnh</div>
-            ) : null}
           </div>
           </td>
             </tr>
@@ -524,27 +520,11 @@ const TableBody = (props) => {
           ))}
         </tbody>
       </table>
-      {isImageModalOpen && (
-  <div className="image-modal">
-    <div className="modal-content">
-      <span className="close" onClick={closeImageModal}>&times;</span>
-      <div className="image-navigation">
-        {currentImageIndex > 0 && (
-          <button onClick={navigateToPreviousImage}>{"<"}</button>
-        )}
-        {currentImageIndex < (tableData.length - 1) && (
-          <button onClick={navigateToNextImage}>{">"}</button>
-        )}
-      </div>
-      <img
-        src={largeImageURL}
-        alt="Ảnh lớn"
-        className="large-image"
-      />
-    </div>
+      {isSlideshowOpen && (
+  <div className="slideshow-overlay">
+    <Slideshow imageUrls={slideshowImageUrls} onClose={closeSlideshow} />
   </div>
 )}
-
 
     </div>
   );

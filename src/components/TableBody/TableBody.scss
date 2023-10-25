@@ -232,6 +232,7 @@
 .selected-option {
   border: 1px solid #ccc;
   padding: 5px;
+  padding-right: 10px;
   cursor: pointer;
   border-radius: 5px 5px 5px 5px;
 }
@@ -286,6 +287,31 @@
 .table-row {
   position: relative; /* Đảm bảo rằng các phần tử con bên trong nó không bị che */
   //z-index: 0; /* Điều chỉnh z-index ở đây để đảm bảo rằng dropdown sẽ hiển thị trên hàng khác */
+}
+
+/* TableBody.scss */
+.slideshow-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(255, 255, 255, 0.8); /* Điều chỉnh màu nền và độ mờ tại đây */
+  z-index: 999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* CSS cho slideshow container */
+.slideshow-container {
+  background: white;
+  padding: 20px;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
 }
 
 
