@@ -78,7 +78,6 @@ const TableBody = (props) => {
       const evalCondition = eval(condition); 
       return evalCondition ? trueResult : falseResult;
     });
-    console.log(formulaWithValues);
     try {
       return formulaWithValues;
     } catch (error) {
@@ -88,14 +87,12 @@ const TableBody = (props) => {
 
   const calculatePrice = (product, length, width, height, weight) => {
     if (product) {
-      //console.log(product);
       let formula = product;
       formula = formula.replace('Dài', length);
       formula = formula.replace('Rộng', width);
       formula = formula.replace('Cao', height);
       formula = formula.replace('Khối lượng', weight);
       const total = eval(formula);
-      //console.log(product);
       return total;
     } else {
       return 0;
@@ -191,6 +188,8 @@ const TableBody = (props) => {
         }
         const price = parseFloat(row.price) || 0;
         const total = calculateTotal(selectedProduct, length, width, height, weight, price);
+        row.total = total;
+        
       });
 
       setTableData(updatedTableData);
@@ -285,9 +284,8 @@ const TableBody = (props) => {
   
   const calculateUnit2 = (product) => {
   
-    // Kiểm tra xem unit có chứa các trường "Dài", "Rộng", hoặc "Cao" hay không
     if (product.unit.includes("Dài") || product.unit.includes("Rộng") || product.unit.includes("Cao")) {
-      return null; // Nếu có, trả về null
+      return null; 
     }else{
       return product.unit;
     }
@@ -299,7 +297,6 @@ const TableBody = (props) => {
       const updatedTableData = [...tableData];
       updatedTableData[index].product = selectedProduct;
 
-      console.log(selectedProduct);
 
       if (selectedProduct.price) {
         updatedTableData[index].price = selectedProduct.price;
@@ -315,7 +312,6 @@ const TableBody = (props) => {
       const selectedDescription = selectedProduct.description || 'Chọn mô tả';
       updatedTableData[index].description = selectedDescription;
       updatedTableData[index].selectedDescription = '';
-      console.log(selectedProduct.description);
       const unit = calculateUnit2(selectedProduct);
       updatedTableData[index].unit = unit;
       //updatedTableData[index].unit = selectedProduct.unit || '';
@@ -345,8 +341,6 @@ const TableBody = (props) => {
 
     updatedTableData[index].description = selectedValue;
     const selectedProduct = updatedTableData[index].product;
-    console.log(selectedProduct);
-    console.log(selectedValue);
 
     const matchedMaterial = selectedProduct.listMaterial.find(
       (material) => material.material.description === selectedValue
@@ -367,7 +361,6 @@ const TableBody = (props) => {
 
       if (supp) {
         const material = selectedValue.materialList;
-        console.log(material);
 
         if (material) {
           const price = material.price.find((price) => price.trademark === supp);

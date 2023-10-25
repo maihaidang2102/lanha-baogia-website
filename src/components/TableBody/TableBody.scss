@@ -47,6 +47,7 @@
 
     .total {
         width: 10.7%;
+        white-space: pre-wrap;
     }
 
     .note {
@@ -58,13 +59,12 @@
     }
 }
 
-/* Thêm CSS cho nút "Thêm hàng" và biểu tượng dấu cộng */
 .add-row-button {
     background-color: #ffffff;
     color: #007BFF;
     border: none;
     width: 100%;
-    padding: 5px 200px; /* Điều chỉnh padding theo ý muốn */
+    padding: 5px 200px; 
     border-radius: 5px;
     border: 1px solid #007BFF;
     border-color: #007BFF;
@@ -129,10 +129,10 @@
     width: 61.3%;
   }
   .footer-total{
+    font-weight: bold;
     width: 10.7%;
   }
 
-  /* Menu ngữ cảnh */
 .context-menu {
     position: absolute;
     text-align: center;
