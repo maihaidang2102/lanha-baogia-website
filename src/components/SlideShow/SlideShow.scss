@@ -45,10 +45,31 @@
   }
   .image-list-container{
     background-color: rgb(35, 36, 36);
-    width: 80%;
+    width: 83%;
     height: 10%;
     z-index: 1;
+    border-radius: 10px;
     justify-content: flex-end;
     align-items: center;
-    padding: 10px 0;
+    padding-top: 5px;
+    overflow-x: auto;
   }
+
+  .image-list-item {
+    justify-content: center;
+    width: 50px; /* Set the desired width */
+    height: 50px; /* Set the desired height */
+    margin: 5px; /* Add spacing between images */
+    border: 1px solid #fff; /* Add a border or other styling as needed */
+  }
+
+  .image-list-scroll {
+    display: flex;
+    //height: 80%;
+    flex-wrap: nowrap; /* Prevent images from wrapping to the next line */
+    padding: 5px; /* Add spacing between images */
+  }
+  /* Thêm đường viền màu xanh cho ảnh đã chọn */
+.image-list-item.selected {
+  border: 3px solid #068ef0;
+}

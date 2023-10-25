@@ -19,6 +19,10 @@ const Slideshow = ({ imageUrls, onClose }) => {
     }
   };
 
+  const selectImage = (index) => {
+    setCurrentIndex(index);
+  };
+
   return (
     <div className="slideshow">
       <div className="close-button" onClick={onClose}>
@@ -37,8 +41,19 @@ const Slideshow = ({ imageUrls, onClose }) => {
           <FontAwesomeIcon icon={faChevronRight} size="2x" color="#1c1b1a" />
         </div>
       </div> 
-      {/* <div className="image-list-container">
-        </div> */}
+      <div className="image-list-container">
+  <div className="image-list-scroll">
+    {imageList.map((imageUrl, index) => (
+      <img
+        key={index}
+        src={`https://api.lanha.vn/profiles/icon-img/${imageUrl}`}
+        alt={`Image ${index + 1}`}
+        className={`image-list-item ${index === currentIndex ? 'selected' : ''}`}
+              onClick={() => selectImage(index)}
+      />
+    ))}
+  </div>
+</div>
 
     </div>
        
