@@ -16,7 +16,7 @@
     }
 
     .product {
-        width: 8.7%;
+        width: 12.7%;
         text-align: start;
         white-space: pre-wrap;
     }
@@ -55,7 +55,7 @@
     }
 
     .reference-image {
-        width: 17.3%;
+        width: 13.3%;
     }
 }
 
@@ -165,7 +165,7 @@
   }
   
   .table-cell.reference-image {
-    width: 17.3%;
+    width: 13.3%;
     /* Thêm max-width và max-height để giữ kích thước tỷ lệ của hình ảnh */
     max-width: 100%;
     max-height: 100%;
@@ -313,6 +313,37 @@
   max-height: 90%;
   overflow: auto;
 }
+
+.multy-picture{
+  font-weight: bolder;
+}
+.reference-image-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-text {
+  visibility: hidden;
+  width: 160px;
+  background-color: #333;
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.reference-image-tooltip:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
 
 
 

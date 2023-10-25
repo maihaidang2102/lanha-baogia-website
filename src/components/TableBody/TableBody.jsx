@@ -403,8 +403,8 @@ const TableBody = (props) => {
           {tableData.map((row, index) => (
             <tr key={index} onContextMenu={(e) => handleContextMenu(e, index)} onClick={closeContextMenu} className="table-row">
             <td className="table-cell product">
-            <div className={`custom-select ${isDropdownOpen[index] ? 'active' : ''}`} onClick={() => toggleDropdown(index)}>
-                  <div className="selected-option">{selectedProducts[index] && selectedProducts[index].name ? selectedProducts[index].name : 'Chọn sản phẩm'}</div>
+            <div className={`custom-select ${isDropdownOpen[index] ? 'active' : ''}`} onClick={() => toggleDropdown(index)} >
+                  <div className="selected-option" >{selectedProducts[index] && selectedProducts[index].name ? selectedProducts[index].name : 'Chọn sản phẩm'}</div>
                   <div className="dropdown-arrow">{isDropdownOpen[index] ? '▲' : '▼'}</div>
                   {isDropdownOpen[index] && (
                     <div className="options">
@@ -479,20 +479,24 @@ const TableBody = (props) => {
               <td className="table-cell note">{row.note}</td>
               <td className="table-cell reference-image">
               <div className="image-container">
-            {Array.isArray(row.referenceImage) && row.referenceImage.length > 0 ? (
-            row.referenceImage.slice(0, 1).map((imgUrl, imgIndex) => (
-              <img
-                key={imgIndex}
-                className="reference-image-item"
-                style={{ width: "50%" }}
-                src={`https://api.lanha.vn/profiles/icon-img/${imgUrl}`}
-                alt={`Ảnh mô tả ${imgIndex + 1}`}
-                onClick={() => openSlideshow(row.referenceImage)}
-              />
-            ))
-          ) : null}
-          </div>
-          </td>
+                {Array.isArray(row.referenceImage) && row.referenceImage.length > 0 ? (
+                  <div className="reference-image-tooltip">
+                    {row.referenceImage.slice(0, 1).map((imgUrl, imgIndex) => (
+                      <img
+                        key={imgIndex}
+                        className="reference-image-item"
+                        style={{ width: "50%" }}
+                        src={`https://api.lanha.vn/profiles/icon-img/${imgUrl}`}
+                        alt={`Ảnh mô tả ${imgIndex + 1}`}
+                        onClick={() => openSlideshow(row.referenceImage)}
+                      />
+                    ))}
+                    <span className="tooltip-text">Nhấn để xem thêm hình ảnh khác</span>
+                    <div className='multy-picture'>. . .</div>
+                  </div>
+                ) : null}
+              </div>
+            </td>
             </tr>
           ))}
         </tbody>
