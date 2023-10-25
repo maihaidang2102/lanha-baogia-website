@@ -5,6 +5,7 @@ import { faChevronLeft, faChevronRight,faTimes } from '@fortawesome/free-solid-s
 
 const Slideshow = ({ imageUrls, onClose }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [imageList, setImageList] = useState(imageUrls); 
 
   const nextSlide = () => {
     if (currentIndex < imageUrls.length - 1) {
@@ -20,10 +21,12 @@ const Slideshow = ({ imageUrls, onClose }) => {
 
   return (
     <div className="slideshow">
-      <div className="close-button" onClick={onClose}> <FontAwesomeIcon icon={faTimes} size='2x' color='#1c1b1a'/></div>
+      <div className="close-button" onClick={onClose}>
+        <FontAwesomeIcon icon={faTimes} size="2x" color="#1c1b1a" />
+      </div>
       <div className="slideshow-content">
-      <div className="slide-control" onClick={prevSlide}>
-          <FontAwesomeIcon icon={faChevronLeft} size="2x" color='#1c1b1a'/>
+        <div className="slide-control" onClick={prevSlide}>
+          <FontAwesomeIcon icon={faChevronLeft} size="2x" color="#1c1b1a" />
         </div>
         <img
           src={`https://api.lanha.vn/profiles/icon-img/${imageUrls[currentIndex]}`}
@@ -31,10 +34,15 @@ const Slideshow = ({ imageUrls, onClose }) => {
           className="slide"
         />
         <div className="slide-control" onClick={nextSlide}>
-          <FontAwesomeIcon icon={faChevronRight} size="2x" color='#1c1b1a' />
+          <FontAwesomeIcon icon={faChevronRight} size="2x" color="#1c1b1a" />
         </div>
-      </div>
+      </div> 
+      {/* <div className="image-list-container">
+        </div> */}
+
     </div>
+       
+
   );
 };
 
