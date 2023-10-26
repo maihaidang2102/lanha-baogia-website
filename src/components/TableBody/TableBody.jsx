@@ -171,20 +171,32 @@ const TableBody = (props) => {
         const length = parseFloat(row.length) || 0;
         const width = parseFloat(row.width) || 0;
         const height = parseFloat(row.height) || 0;
-        const weight = calculateWeight(selectedProduct, length, width, height);
-        if (selectedProduct) {
-          const supp = supplierId;
-          if (supp) {
+        
+        const weight = calculateWeight(selectedProduct, length, width, height) || 0;
+        if(selectedProduct && (selectedProduct.price !=null && selectedProduct.price !=0 && selectedProduct.price != undefined)){
+          const priceVal = calculatePrice(selectedProduct.price,length,width,height,weight);
+          row.price = priceVal;
+        }else {
+          if(selectedProduct){
             const material = row.materialOptions.find((option) => option.value === row.description);
-            if (material) {
-              const price = material.materialList.price.find((price) => price.trademark === supp);
-              const priceVal = calculatePrice(price.priceValue,length,width,height,weight);
-              row.price = price ? priceVal : '';
-            } else {
-              row.price = '';
+            if(material){
+              if(material.materialList.material.price!=null && material.materialList.material.price!=0 && material.materialList.material.price!=undefined){
+                const priceVal = calculatePrice(material.materialList.material.price,length,width,height,weight);
+                row.price= priceVal
+              }else{
+                const supp = supplierId;
+                if (supp) {
+                    const price = material.materialList.price.find((price) => price.trademark === supp);
+                    const priceVal = calculatePrice(price.priceValue,length,width,height,weight);
+                    row.price = price ? priceVal : '';
+                  } else {
+                    row.price = '';
+                  }
+                }
             }
-          }
+            }
         }
+
         const price = parseFloat(row.price) || 0;
         const total = calculateTotal(selectedProduct, length, width, height, weight, price);
         row.total = total;
@@ -289,7 +301,11 @@ const TableBody = (props) => {
       return product.unit;
     }
   };
-  
+
+  const [isLengthColumnEnabled, setIsLengthColumnEnabled] = useState(Array(tableData.length).fill(false));
+  const [isWidthColumnEnabled, setIsWidthColumnEnabled] = useState(Array(tableData.width).fill(false));
+  const [isHeightColumnEnabled, setIsHeightColumnEnabled] = useState(Array(tableData.height).fill(false));
+  const [isWeightColumnEnabled, setIsWeightColumnEnabled] = useState(Array(tableData.weight).fill(false));
 
   const handleProductChange = (index, selectedProduct) => {
     if (selectedProduct) {
@@ -329,6 +345,45 @@ const TableBody = (props) => {
         materialList: material,
         imgUrl: material.material.imgUrl,
       }));
+      if(selectedProduct.size.width==null){
+        const updatedLengthColumnEnabled = [...isLengthColumnEnabled];
+        updatedLengthColumnEnabled[index] = true;
+        setIsLengthColumnEnabled(updatedLengthColumnEnabled);
+      }else{
+        const updatedLengthColumnEnabled = [...isLengthColumnEnabled];
+        updatedLengthColumnEnabled[index] = false;
+        setIsLengthColumnEnabled(updatedLengthColumnEnabled);
+      }
+      if(selectedProduct.size.depth==null){
+        const updatedWidthColumnEnabled = [...isWidthColumnEnabled];
+        updatedWidthColumnEnabled[index] = true;
+        setIsWidthColumnEnabled(updatedWidthColumnEnabled);
+      }else{
+        const updatedWidthColumnEnabled = [...isWidthColumnEnabled];
+        updatedWidthColumnEnabled[index] = false;
+        setIsWidthColumnEnabled(updatedWidthColumnEnabled);
+      }
+      if(selectedProduct.size.height==null){
+        const updatedHeightColumnEnabled = [...isHeightColumnEnabled];
+        updatedHeightColumnEnabled[index] = true;
+        setIsHeightColumnEnabled(updatedHeightColumnEnabled);
+      }else{
+        const updatedHeightColumnEnabled = [...isHeightColumnEnabled];
+        updatedHeightColumnEnabled[index] = false;
+        setIsHeightColumnEnabled(updatedHeightColumnEnabled);
+      }
+      console.log(selectedProduct.formulaQuantity);
+      if(selectedProduct.formulaQuantity==''){
+        const updatedWeightColumnEnabled = [...isWeightColumnEnabled];
+        updatedWeightColumnEnabled[index] = true;
+        console.log(updatedWeightColumnEnabled[index]);
+        setIsWeightColumnEnabled(updatedWeightColumnEnabled);
+      }else{
+        const updatedWeightColumnEnabled = [...isWeightColumnEnabled];
+        updatedWeightColumnEnabled[index] = false;
+        console.log(updatedWeightColumnEnabled[index]); 
+        setIsWeightColumnEnabled(updatedWeightColumnEnabled);
+      }
 
       setTableData(updatedTableData);
     }
@@ -352,9 +407,10 @@ const TableBody = (props) => {
     } else {
       console.log("Không tìm thấy mô tả khớp.");
     }
-
-    if (selectedValue && selectedValue.materialList && selectedValue.materialList.material && selectedValue.materialList.material.price) {
-      updatedTableData[index].price = selectedValue.materialList.material.price;
+    if (selectedValue && matchedMaterial.material && matchedMaterial.material.price!=0) {
+      //updatedTableData[index].price = calculatePrice(matchedMaterial.material.price);
+      updatedTableData[index].price = matchedMaterial.material.price;
+      updatedTableData[index].note = matchedMaterial.material.note;
   } else {
       const supp = supplierId;
 
@@ -380,19 +436,32 @@ const TableBody = (props) => {
     const updatedTableData = [...tableData];
     updatedTableData[index][field] = value;
     const product = updatedTableData[index].product;
+    
+    
 
     const length = updatedTableData[index].length || 0;
     const width = updatedTableData[index].width || 0;
     const height = updatedTableData[index].height || 0;
-    const weight = calculateWeight(product, length, width, height);
+    if(updatedTableData[index].unit !='Cái'){
+      const weight = calculateWeight(product, length, width, height);
+      updatedTableData[index].weight = weight;
+      const price = parseFloat(updatedTableData[index].price) || 0;
+      const total = calculateTotal(product, length, width, height, weight, price);
+      console.log("WWWW",weight)
+      console.log("yyyy",total)
+      updatedTableData[index].total = total.toString();
+
+    }else{
+      const weight = updatedTableData[index].weight || 0;
+      updatedTableData[index].weight = weight;
+      const price = parseFloat(updatedTableData[index].price) || 0;
+      const total = calculateTotal(product, length, width, height, weight, price);
+      console.log("EEEE",weight)
+      console.log("tttt",total)
+      updatedTableData[index].total = total;
+    }
     const unit = calculateUnit(product, length, width, height);
     updatedTableData[index].unit = unit
-
-    updatedTableData[index].weight = weight;
-    const price = parseFloat(updatedTableData[index].price) || 0;
-    const total = calculateTotal(product, length, width, height, weight, price);
-
-    updatedTableData[index].total = total.toString();
     setTableData(updatedTableData);
   };
 
@@ -448,13 +517,16 @@ const TableBody = (props) => {
                   type="number"
                   value={row.length}
                   onChange={(e) => handleInputChange(index, 'length', e.target.value)}
+                  disabled={!isLengthColumnEnabled[index]}
                 />
+                {/* {console.log(`isLengthColumnEnabled[${index}] = ${!isLengthColumnEnabled[index]}`)} */}
               </td>
               <td className="table-cell size-item">
                 <input
                   type="number"
                   value={row.width}
                   onChange={(e) => handleInputChange(index, 'width', e.target.value)}
+                  disabled={!isWidthColumnEnabled[index]}
                 />
               </td>
               <td className="table-cell size-item">
@@ -462,10 +534,16 @@ const TableBody = (props) => {
                   type="number"
                   value={row.height}
                   onChange={(e) => handleInputChange(index, 'height', e.target.value)}
+                  disabled={!isHeightColumnEnabled[index]}
                 />
               </td>
               <td className="table-cell unit">{row.unit}</td>
-              <td className="table-cell weight">{row.weight}</td>
+              <td className="table-cell size-item weight"><input
+                  type="number"
+                  value={row.weight}
+                  onChange={(e) => handleInputChange(index, 'weight', e.target.value)}
+                  disabled={!isWeightColumnEnabled[index]}
+                /></td>
               <td className="table-cell price">{Number(row.price).toLocaleString('vi-VN', {
                 style: 'currency',
                 currency: 'VND'
