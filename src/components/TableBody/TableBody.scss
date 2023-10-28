@@ -5,11 +5,15 @@
     width: 100%;
     font-weight: normal;
     border-collapse: collapse;
+    page-break-inside: auto;
+    page-break-before: auto;
+    page-break-after: auto;
   
     .table-cell {
       text-align: center;
       padding-top: 5px;
       padding-bottom: 5px;
+      page-break-inside: auto;
       white-space: pre-wrap;
       border: 1px solid #000; /* Điều chỉnh border theo ý muốn */
       box-sizing: border-box; /* Sử dụng box-sizing để tính toán kích thước */
@@ -127,10 +131,16 @@
     background-color: #f2f2f2; /* Màu nền cho cột tổng giá tiền */
   }
   .footer-title{
-    width: 61.3%;
+    width: 65.3%;
   }
   .footer-total{
     font-weight: bold;
+    width: 10.7%;
+  }
+  .footer-totdescriptional{
+    width: 13.3%;
+  }
+  .footer-note{
     width: 10.7%;
   }
 
@@ -252,7 +262,7 @@
   background-color: #fff;
   border: 1px solid #ccc;
   width: 100%;
-  max-height: 150px;
+  max-height: 1000%;
   overflow-y: auto;
 }
 
@@ -344,6 +354,14 @@
   visibility: visible;
   opacity: 1;
 }
+
+
+input:disabled {
+  cursor: not-allowed; 
+  background-color: -internal-light-dark(rgba(239, 239, 239, 0.3), rgba(59, 59, 59, 0.3));
+  color: #070707; 
+}
+
 
 
 

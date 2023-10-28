@@ -130,7 +130,7 @@ const QuotationForm = () => {
       className="dropdown-button"
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     >
-      {selectedSupplier || 'Chọn thương hiệu nhà cung cấp'}
+      {selectedSupplier || 'Nhà cung cấp'}
     </div>
     {isDropdownOpen && (
       <div className="dropdown-content">

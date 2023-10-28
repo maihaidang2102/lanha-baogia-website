@@ -55,10 +55,10 @@ const TableBody = (props) => {
   const calculateWeight = (product, length, width, height) => {
     if (product && product.formulaQuantity) {
       const processedFormula = product.formulaQuantity
-        .replace(new RegExp("Cao", "g"), height)
-        .replace(new RegExp("Rộng", "g"), width)
-        .replace(new RegExp("Dài", "g"), length)
-        .replace(new RegExp("Khối lượng", "g"), length);
+        .replace(new RegExp("Cao", "g"), parseFloat(height))
+        .replace(new RegExp("Rộng", "g"), parseFloat(width))
+        .replace(new RegExp("Dài", "g"), parseFloat(length))
+        .replace(new RegExp("Khối lượng", "g"), parseFloat(length));
       const weight = eval(processedFormula);
       return weight;
     } else {
@@ -105,7 +105,7 @@ const TableBody = (props) => {
       .replace('Dài', length)
       .replace('Rộng', width)
       .replace('Cao', height)
-      .replace('Khối lượng', weight)
+      .replace('Khối lượng', parseFloat(weight))
       .replace('Đơn giá', price);
     const total = eval(formula);
     return total;
@@ -171,13 +171,42 @@ const TableBody = (props) => {
         const length = parseFloat(row.length) || 0;
         const width = parseFloat(row.width) || 0;
         const height = parseFloat(row.height) || 0;
-        
-        const weight = calculateWeight(selectedProduct, length, width, height) || 0;
-        if(selectedProduct && (selectedProduct.price !=null && selectedProduct.price !=0 && selectedProduct.price != undefined)){
-          const priceVal = calculatePrice(selectedProduct.price,length,width,height,weight);
-          row.price = priceVal;
-        }else {
-          if(selectedProduct){
+        let weight;
+        //const weight = calculateWeight(selectedProduct, length, width, height) || 0;
+
+        // if(selectedProduct && (selectedProduct.price !=null && selectedProduct.price !=0 && selectedProduct.price != undefined)){
+        //   const priceVal = calculatePrice(selectedProduct.price,length,width,height,weight);
+        //   row.price = priceVal;
+        // }else {
+        //   if(selectedProduct){
+        //     const material = row.materialOptions.find((option) => option.value === row.description);
+        //     if(material){
+        //       if(material.materialList.material.price!=null && material.materialList.material.price!=0 && material.materialList.material.price!=undefined){
+        //         const priceVal = calculatePrice(material.materialList.material.price,length,width,height,weight);
+        //         row.price= priceVal
+        //       }else{
+        //         const supp = supplierId;
+        //         if (supp) {
+        //             const price = material.materialList.price.find((price) => price.trademark === supp);
+        //             const priceVal = calculatePrice(price.priceValue,length,width,height,weight);
+        //             row.price = price ? priceVal : '';
+        //           } else {
+        //             row.price = '';
+        //           }
+        //         }
+        //     }
+        //     }
+        // }
+        if(selectedProduct){
+          if(selectedProduct.formulaQuantity === ''){
+            weight = row.weight || 0;
+          }else{
+            weight = calculateWeight(selectedProduct, length, width, height) || 0;
+          }
+          if(selectedProduct.price !=null && selectedProduct.price !=0 && selectedProduct.price != undefined){
+            const priceVal = calculatePrice(selectedProduct.price,length,width,height,weight);
+            row.price = priceVal;
+          }else{
             const material = row.materialOptions.find((option) => option.value === row.description);
             if(material){
               if(material.materialList.material.price!=null && material.materialList.material.price!=0 && material.materialList.material.price!=undefined){
@@ -194,7 +223,7 @@ const TableBody = (props) => {
                   }
                 }
             }
-            }
+          }
         }
 
         const price = parseFloat(row.price) || 0;
@@ -207,6 +236,7 @@ const TableBody = (props) => {
       calculateTotalPrice();
     }
   }, [supplierId, apiProducts, tableData]);
+  
 
   const calculateTotalPrice = () => {
     let totalPrice = 0;

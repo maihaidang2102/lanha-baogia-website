@@ -205,7 +205,7 @@
 
 /* Style for the dropdown button */
 .dropdown-button {
-  max-width: 14%;
+  max-width: 9%;
   padding: 10px;
   background-color: #fffafa;
   border: 1px solid #ccc;
@@ -214,21 +214,29 @@
   font-weight: bold;
   text-align: left;
   position: relative;
+  transition: background-color 0.3s;
+}
+
+.dropdown-button:hover {
+  background-color: #f0f0f0; // Màu nền khi hover
 }
 
 /* Style for the dropdown content */
 .dropdown-content {
-  //display: none;
   position: absolute;
   background-color: #fffafa;
-  border: 1px solid #fffdfd;
+  border: 1px solid #ccc;
   font-weight: bold;
   border-top: none;
   border-radius: 0 0 5px 5px;
   z-index: 1;
-  max-width:  14%;
+  max-width: 14%;
   max-height: 200px;
   overflow-y: auto;
+  display: none; // Sẽ hiển thị khi dropdown mở
+}
+.dropdown-container:hover .dropdown-content {
+  display: block;
 }
 
 /* Style for dropdown options */
@@ -245,9 +253,11 @@
 
 /* CSS cho biểu tượng mũi tên xuống */
 .dropdown-button::after {
-  content: " ▼"; /* Thêm biểu tượng Unicode ▼ */
-  margin-right: 5px; /* Khoảng cách giữa văn bản và biểu tượng */
-  font-size: 10px; /* Kích thước biểu tượng */
+  content: " ▼"; // Thay đổi biểu tượng thành mũi tên Unicode ▶
+  position: absolute; // Đặt biểu tượng ở vị trí tuyệt đối
+  top: 50%; // Đặt biểu tượng ở giữa theo chiều dọc
+  right: 5px; // Đặt biểu tượng cách phía bên phải 5px
+  transform: translateY(-50%); // Căn giữa theo chiều dọc
+  font-size: 12px; // Kích thước biểu tượng
 }
-
 

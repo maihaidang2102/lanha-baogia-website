@@ -3,7 +3,7 @@ import QuotationForm from './components/QuotationForm/QuotationForm';
 import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
 
 const options: Options = {
-  filename: 'trang-web.pdf',
+  filename: `lanha-baogia-${new Date().toLocaleDateString()}.pdf`,
   method: 'save',
   resolution: Resolution.HIGH,
   page: {
