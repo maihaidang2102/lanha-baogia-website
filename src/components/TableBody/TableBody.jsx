@@ -548,6 +548,7 @@ const TableBody = (props) => {
                   value={row.length}
                   onChange={(e) => handleInputChange(index, 'length', e.target.value)}
                   disabled={!isLengthColumnEnabled[index]}
+                  style={isLengthColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
                 />
                 {/* {console.log(`isLengthColumnEnabled[${index}] = ${!isLengthColumnEnabled[index]}`)} */}
               </td>
@@ -557,6 +558,7 @@ const TableBody = (props) => {
                   value={row.width}
                   onChange={(e) => handleInputChange(index, 'width', e.target.value)}
                   disabled={!isWidthColumnEnabled[index]}
+                  style={isWidthColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
                 />
               </td>
               <td className="table-cell size-item">
@@ -564,6 +566,7 @@ const TableBody = (props) => {
                   type="number"
                   value={row.height}
                   onChange={(e) => handleInputChange(index, 'height', e.target.value)}
+                  style={isHeightColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
                   disabled={!isHeightColumnEnabled[index]}
                 />
               </td>
@@ -573,6 +576,7 @@ const TableBody = (props) => {
                   value={row.weight}
                   onChange={(e) => handleInputChange(index, 'weight', e.target.value)}
                   disabled={!isWeightColumnEnabled[index]}
+                  style={isWeightColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
                 /></td>
               <td className="table-cell price">{Number(row.price).toLocaleString('vi-VN', {
                 style: 'currency',

@@ -97,10 +97,10 @@
   
   /* Hoặc nếu bạn muốn giữ lại padding nhưng muốn loại bỏ border và điều chỉnh kích thước */
   .size-item input {
-    width: 90%; /* Điều chỉnh kích thước */
-    border: none; /* Loại bỏ border */
+    width: 80%; /* Điều chỉnh kích thước */
+    //border: none; /* Loại bỏ border */
     text-align: center;
-    border-bottom: 1px dotted #060607; /* Thêm gạch chân dưới ô input */
+    //border-bottom: 1px dotted #060607; /* Thêm gạch chân dưới ô input */
     transition: border-bottom 0.2s;
   }
   .size-item input:focus {

@@ -9,7 +9,7 @@ import html2pdf from 'html2pdf.js';
 import PromotionTable from '../Promotions/Promotions';
 import html2canvas from 'html2canvas';
 
-const QuotationForm = () => {
+const QuotationForm = ({ onFormValidationChange }) => {
   const [selectedSupplier, setSelectedSupplier] = useState('');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [products, setProducts] = useState([]);
@@ -20,6 +20,12 @@ const QuotationForm = () => {
   const [date, setDate] = useState(getCurrentDate());
   const [tables, setTables] = useState([]);
   const [suppliers, setSuppliers] = useState([]);
+
+  function handleFormValidation() {
+    const isValid = customerName.trim() !== '' && customerPhone.trim() !== '' && customerAddress.trim() !== '';
+    console.log("OOOOOOOOOOO",isValid);
+    onFormValidationChange(isValid);
+  }
 
   useEffect(() => {
     async function fetchData() {
@@ -93,7 +99,8 @@ const QuotationForm = () => {
               type="text"
               placeholder="Nhập họ và tên"
               value={customerName}
-              onChange={(e) => setCustomerName(e.target.value)}
+              onChange={(e) =>{ setCustomerName(e.target.value);handleFormValidation(); }}
+              
             />
           </div>
           <div>
@@ -102,7 +109,7 @@ const QuotationForm = () => {
               type="text"
               placeholder="Nhập số điện thoại"
               value={customerPhone}
-              onChange={(e) => setCustomerPhone(e.target.value)}
+              onChange={(e) => {setCustomerPhone(e.target.value);handleFormValidation(); }}
             />
           </div>
           <div>
@@ -111,7 +118,7 @@ const QuotationForm = () => {
               type="text"
               placeholder="Nhập địa chỉ"
               value={customerAddress}
-              onChange={(e) => setCustomerAddress(e.target.value)}
+              onChange={(e) => {setCustomerAddress(e.target.value);handleFormValidation(); }}
             />
           </div>
           <div>

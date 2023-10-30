@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef,useState  } from 'react';
 import QuotationForm from './components/QuotationForm/QuotationForm';
 import generatePDF, { Resolution, Margin, Options } from 'react-to-pdf';
 
@@ -27,15 +27,20 @@ const options: Options = {
 
 function App() {
   const pdfRef = useRef(null);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   const openPDF = (element) => {
-    generatePDF(() => element, options);
+    if (isFormValid) {
+      generatePDF(() => element, options);
+    } else {
+      alert("Vui lòng điền đầy đủ thông tin trước khi xuất PDF.");
+    }
   };
 
   return (
     <div className="App">
       <div ref={pdfRef}>
-        <QuotationForm />
+      <QuotationForm onFormValidationChange={setIsFormValid} />
       </div>
       <button
         onClick={() => openPDF(pdfRef.current)}
