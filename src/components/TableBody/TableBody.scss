@@ -5,9 +5,6 @@
     width: 100%;
     font-weight: normal;
     border-collapse: collapse;
-    page-break-inside: auto;
-    page-break-before: auto;
-    page-break-after: auto;
   
     .table-cell {
       text-align: center;
@@ -17,6 +14,15 @@
       white-space: pre-wrap;
       border: 1px solid #000; /* Điều chỉnh border theo ý muốn */
       box-sizing: border-box; /* Sử dụng box-sizing để tính toán kích thước */
+    }
+
+    @media print {
+      .noprint-border {
+        border: none !important;
+      }
+      .toggle-icon {
+        display: none;
+      }
     }
 
     .product {
@@ -99,6 +105,7 @@
   .size-item input {
     width: 80%; /* Điều chỉnh kích thước */
     //border: none; /* Loại bỏ border */
+    height: 20px;
     text-align: center;
     //border-bottom: 1px dotted #060607; /* Thêm gạch chân dưới ô input */
     transition: border-bottom 0.2s;

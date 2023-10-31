@@ -81,7 +81,7 @@ const QuotationForm = ({ onFormValidationChange }) => {
           </div>
           <div>
             <strong>Số điện thoại:</strong>
-            <span> 081 2663 325</span>
+            <span> 0703 937 521</span>
           </div>
           <div>
             <strong>Showroom:</strong>
@@ -132,9 +132,9 @@ const QuotationForm = ({ onFormValidationChange }) => {
         </div>
       </div>
       <div className="center-content">
-  <div className="dropdown-container">
+  <div className="dropdown-container noprint-border">
     <div
-      className="dropdown-button"
+      className="dropdown-button noprint-border"
       onClick={() => setIsDropdownOpen(!isDropdownOpen)}
     >
       {selectedSupplier || 'Nhà cung cấp'}
@@ -156,7 +156,15 @@ const QuotationForm = ({ onFormValidationChange }) => {
 </div>
       <TableHeader />
       <TableBody supplierId={supplierId} />
+      <div className="note-2">
+      <p className="note-text">
+        Báo giá trên chỉ mang tính chất tham khảo do chưa có số liệu công trình thực tế. Vui lòng liên hệ sale account qua Fanpage Nội thất Là Nhà:  
+        <a href="https://www.facebook.com/noithat.lanha" target="_blank" rel="noopener noreferrer"> https://www.facebook.com/noithat.lanha</a> hoặc hotline/zalo:  
+        <a href="https://zalo.me/0703937521" target="_blank" rel="noopener noreferrer"> https://zalo.me/0703937521</a> để được tư vấn đo đạc chính xác nhất.
+      </p>
     </div>
+    </div>
+    
   );
 };
 

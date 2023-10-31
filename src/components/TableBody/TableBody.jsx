@@ -172,31 +172,6 @@ const TableBody = (props) => {
         const width = parseFloat(row.width) || 0;
         const height = parseFloat(row.height) || 0;
         let weight;
-        //const weight = calculateWeight(selectedProduct, length, width, height) || 0;
-
-        // if(selectedProduct && (selectedProduct.price !=null && selectedProduct.price !=0 && selectedProduct.price != undefined)){
-        //   const priceVal = calculatePrice(selectedProduct.price,length,width,height,weight);
-        //   row.price = priceVal;
-        // }else {
-        //   if(selectedProduct){
-        //     const material = row.materialOptions.find((option) => option.value === row.description);
-        //     if(material){
-        //       if(material.materialList.material.price!=null && material.materialList.material.price!=0 && material.materialList.material.price!=undefined){
-        //         const priceVal = calculatePrice(material.materialList.material.price,length,width,height,weight);
-        //         row.price= priceVal
-        //       }else{
-        //         const supp = supplierId;
-        //         if (supp) {
-        //             const price = material.materialList.price.find((price) => price.trademark === supp);
-        //             const priceVal = calculatePrice(price.priceValue,length,width,height,weight);
-        //             row.price = price ? priceVal : '';
-        //           } else {
-        //             row.price = '';
-        //           }
-        //         }
-        //     }
-        //     }
-        // }
         if(selectedProduct){
           if(selectedProduct.formulaQuantity === ''){
             weight = row.weight || 0;
@@ -503,8 +478,8 @@ const TableBody = (props) => {
             <tr key={index} onContextMenu={(e) => handleContextMenu(e, index)} onClick={closeContextMenu} className="table-row">
             <td className="table-cell product">
             <div className={`custom-select ${isDropdownOpen[index] ? 'active' : ''}`} onClick={() => toggleDropdown(index)} >
-                  <div className="selected-option" >{selectedProducts[index] && selectedProducts[index].name ? selectedProducts[index].name : 'Chọn sản phẩm'}</div>
-                  <div className="dropdown-arrow">{isDropdownOpen[index] ? '▲' : '▼'}</div>
+                  <div className="selected-option noprint-border" >{selectedProducts[index] && selectedProducts[index].name ? selectedProducts[index].name : 'Chọn sản phẩm'}</div>
+                  <div className="dropdown-arrow toggle-icon">{isDropdownOpen[index] ? '▲' : '▼'}</div>
                   {isDropdownOpen[index] && (
                     <div className="options">
                       {apiProducts.map((product) => (
@@ -516,15 +491,15 @@ const TableBody = (props) => {
                 )}
               </div>
               </td>
-              <td className="table-cell description">
+              <td className="table-cell description ">
               <div
                   className={`custom-select ${isDescriptionDropdownOpen[index] ? 'active' : ''}`}
                   onClick={() => toggleDescriptionDropdown(index)}
                 >
-                <div className="selected-option">
+                <div className="selected-option noprint-border">
                   {row.selectedDescription ? row.selectedDescription : '-- Chọn mô tả --'}
                 </div>
-                <div className="dropdown-arrow">
+                <div className="dropdown-arrow toggle-icon">
                   {isDescriptionDropdownOpen[index] ? '▲' : '▼'}
                 </div>
                 {isDescriptionDropdownOpen[index] && row.materialOptions && row.materialOptions.length > 0 &&(
@@ -548,7 +523,8 @@ const TableBody = (props) => {
                   value={row.length}
                   onChange={(e) => handleInputChange(index, 'length', e.target.value)}
                   disabled={!isLengthColumnEnabled[index]}
-                  style={isLengthColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
+                  style={isLengthColumnEnabled[index] ? {  border: '1px solid #C0C0C0' } : {border: 'none'}}
+                  className='noprint-border'
                 />
                 {/* {console.log(`isLengthColumnEnabled[${index}] = ${!isLengthColumnEnabled[index]}`)} */}
               </td>
@@ -559,6 +535,7 @@ const TableBody = (props) => {
                   onChange={(e) => handleInputChange(index, 'width', e.target.value)}
                   disabled={!isWidthColumnEnabled[index]}
                   style={isWidthColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
+                  className='noprint-border'
                 />
               </td>
               <td className="table-cell size-item">
@@ -567,6 +544,7 @@ const TableBody = (props) => {
                   value={row.height}
                   onChange={(e) => handleInputChange(index, 'height', e.target.value)}
                   style={isHeightColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
+                  className='noprint-border'
                   disabled={!isHeightColumnEnabled[index]}
                 />
               </td>
@@ -577,6 +555,7 @@ const TableBody = (props) => {
                   onChange={(e) => handleInputChange(index, 'weight', e.target.value)}
                   disabled={!isWeightColumnEnabled[index]}
                   style={isWeightColumnEnabled[index] ? { border: '1px solid #C0C0C0' } : {border: 'none'}}
+                  className='noprint-border'
                 /></td>
               <td className="table-cell price">{Number(row.price).toLocaleString('vi-VN', {
                 style: 'currency',
@@ -604,7 +583,7 @@ const TableBody = (props) => {
                       />
                     ))}
                     <span className="tooltip-text">Nhấn để xem thêm hình ảnh khác</span>
-                    <div className='multy-picture'>. . .</div>
+                    <div className='multy-picture toggle-icon'>. . .</div>
                   </div>
                 ) : null}
               </div>
@@ -613,8 +592,8 @@ const TableBody = (props) => {
           ))}
         </tbody>
       </table>
-      <button onClick={addRow} className="add-row-button">
-        <i className="fas fa-plus"></i> +
+      <button onClick={addRow} className="add-row-button toggle-icon">
+        <i className="fas fa-plus "></i> +
       </button>
       {contextMenuIndex !== null && (
         <div className="context-menu" style={{ top: contextMenuPosition.top, left: contextMenuPosition.left }}>

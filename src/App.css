@@ -3,10 +3,22 @@
   margin: 0 auto;
 }
 
+.page {
+}
+
 body {
   margin: 0;
   padding: 0;
 }
+
+
+@media print {
+  /* Ẩn nút in mặc định của trình duyệt */
+  .no-print {
+    display: none;
+  }
+}
+
 
 
 .App-logo {
