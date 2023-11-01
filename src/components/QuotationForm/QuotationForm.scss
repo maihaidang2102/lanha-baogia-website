@@ -258,6 +258,16 @@
   cursor: pointer;
   transition: background-color 0.3s;
 }
+.react-joyride__beacon {
+  position: fixed;
+  top: 20px; /* Đặt top để điều chỉnh vị trí theo yêu cầu của bạn */
+  right: 20px; /* Đặt right để điều chỉnh vị trí theo yêu cầu của bạn */
+  background-color: #0073e6; /* Đặt màu nền của nút theo ý muốn của bạn */
+  color: #0073e6; /* Đặt màu chữ cho văn bản theo ý muốn của bạn */
+  padding: 10px 20px; /* Điều chỉnh lề và kích thước nút theo yêu cầu của bạn */
+  border: none; /* Loại bỏ viền nếu bạn muốn */
+  cursor: pointer;
+}
 
 /* Highlight on hover */
 .dropdown-option:hover {
