@@ -577,7 +577,7 @@ const TableBody = (props) => {
                         key={imgIndex}
                         className="reference-image-item"
                         style={{ width: "50%" }}
-                        src={`https://api.lanha.vn/profiles/icon-img/${imgUrl}`}
+                        src={`https://lanha-bucket.s3.ap-southeast-1.amazonaws.com/uploads/images/icons/${imgUrl}`}
                         alt={`Ảnh mô tả ${imgIndex + 1}`}
                         onClick={() => openSlideshow(row.referenceImage)}
                       />
